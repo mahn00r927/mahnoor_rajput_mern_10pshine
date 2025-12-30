@@ -1,13 +1,66 @@
-
-import './App.css'
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Navbar } from "./PublicView/Navbar";
+import { HeroSection } from "./PublicView/HeroSection";
+import { FeaturesSection } from "./PublicView/FeatureSection";
+import { CTASection } from "./PublicView/CTA";
+import { Footer } from "./PublicView/Footer";
+import { Login } from "./PublicView/LogIn";
+import { Signup } from "./PublicView/SignUp";
+import Sidebar from "./UserDashboard/Sidebar";
 
 function App() {
-
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <Router>
+     
+
+      <Routes>
+        {/* Home */}
+        <Route
+          path="/"
+          element={
+            <div className="app-container">
+              <Navbar />
+              <HeroSection />
+              <FeaturesSection />
+              <CTASection />
+              <Footer />
+            </div>
+          }
+        />
+
+        {/* Login */}
+        <Route
+          path="/login"
+          element={
+            <div className="app-container">
+              <Login />
+            </div>
+          }
+        />
+
+        {/* Signup */}
+        <Route
+          path="/signup"
+          element={
+            <div className="app-container">
+              <Signup />
+            </div>
+          }
+        />
+
+         {/* Dashboard */}
+        <Route
+          path="/dashboard"
+          element={
+            <div className="app-container">
+              <Sidebar/>
+            </div>
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 
-export default App
+export default App;
