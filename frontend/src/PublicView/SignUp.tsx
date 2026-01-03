@@ -9,10 +9,30 @@ export function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const nav = useNavigate();
 
-  const handleSignup = () => {
-    console.log("SIGNUP", { name, email, password });
-    // Password will be hashed with JWT on backend
-  };
+ const handleSignup = async () => {
+  try {
+    const response = await fetch("http://localhost:5000/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    const data = await response.json();
+    console.log("SIGNUP RESPONSE", data);
+
+    if (response.ok) {
+      // Signup successful
+      alert("Account created successfully!");
+      nav("/login"); // redirect to login page
+    } else {
+      // Signup failed
+      alert(data.message || "Signup failed");
+    }
+  } catch (err) {
+    console.error("Error signing up:", err);
+  }
+};
+
 
   const handleGoBack = () => {
     window.history.back();

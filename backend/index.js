@@ -40,6 +40,9 @@ app.use((err, req, res, next) => {
 
   res.status(500).json({ message: "Internal Server Error" });
 });
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
 
 /* ================= DB + SERVER ================= */
 const PORT = process.env.PORT || 5000;
