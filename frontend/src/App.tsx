@@ -7,8 +7,7 @@ import { CTASection } from "./PublicView/CTA";
 import { Footer } from "./PublicView/Footer";
 import { Login } from "./PublicView/LogIn";
 import { Signup } from "./PublicView/SignUp";
-import Sidebar from "./UserDashboard/Sidebar";
-
+import Dashboard from "./UserDashboard/Dashboard";
 function App() {
   return (
     <Router>
@@ -54,7 +53,7 @@ function App() {
           path="/dashboard"
           element={
             <div className="app-container">
-              <Sidebar/>
+              <Dashboard/>
             </div>
           }
         />
