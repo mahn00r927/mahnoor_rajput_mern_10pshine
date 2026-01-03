@@ -109,6 +109,7 @@ export  function Login() {
               <button
                 type="button"
                 className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                onClick={() => nav("/forgot-password")} 
               >
                 Forgot password?
               </button>
