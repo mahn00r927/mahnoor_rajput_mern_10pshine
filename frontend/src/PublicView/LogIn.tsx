@@ -8,9 +8,41 @@ export  function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const nav = useNavigate();
 
-  const handleLogin = () => {
-    console.log("LOGIN", { email, password });
-  };
+  const handleLogin = async () => {
+  if (!email || !password) {
+    alert("Please enter email and password");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    // Check if response is ok
+    if (!response.ok) {
+      const errorData = await response.json(); // Backend should send JSON errors
+      throw new Error(errorData.message || "Login failed");
+    }
+
+    const data = await response.json();
+    console.log("Login Success:", data);
+
+    // Save JWT token in localStorage (or state)
+    localStorage.setItem("token", data.token);
+
+    // Navigate to notes page
+    nav("/dashboard");
+  } catch (err: any) {
+    console.error("Error signing in:", err.message);
+    alert(err.message);
+  }
+};
+
 
   const handleGoBack = () => {
     window.history.back();
@@ -109,6 +141,7 @@ export  function Login() {
               <button
                 type="button"
                 className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                onClick={() => nav("/forgot-password")} 
               >
                 Forgot password?
               </button>
