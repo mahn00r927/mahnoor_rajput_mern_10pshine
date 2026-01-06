@@ -7,7 +7,6 @@ import { CTASection } from "./PublicView/CTA";
 import { Footer } from "./PublicView/Footer";
 import { Login } from "./PublicView/LogIn";
 import { Signup } from "./PublicView/SignUp";
-import Sidebar from "./UserDashboard/Sidebar";
 import { ForgotPassword } from "./PublicView/ForgotPassword";
 import { ResetPassword } from "./PublicView/ResetPassword";
 import Dashboard from "./UserDashboard/Dashboard";
