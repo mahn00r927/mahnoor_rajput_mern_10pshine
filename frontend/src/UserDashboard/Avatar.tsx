@@ -15,7 +15,8 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const initial = name.charAt(0).toUpperCase();
+  const initial = name ? name.charAt(0).toUpperCase() : "?";
+
 
   // close dropdown on outside click
   useEffect(() => {
