@@ -29,7 +29,7 @@ exports.createNote = async (req, res) => {
 // GET ALL NOTES (user specific)
 exports.getNotes = async (req, res) => {
   try {
-    const notes = await Note.find({ user: req.user.id });
+    const notes = await Note.find({ user: req.user.id }).sort({ createdAt: -1 });
     logger.info("Fetched user notes");
     res.json(notes);
   } catch (error) {
