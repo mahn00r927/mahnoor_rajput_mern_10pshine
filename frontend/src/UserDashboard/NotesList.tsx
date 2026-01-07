@@ -12,7 +12,7 @@ export default function NotesList({ notes, onEdit, onDelete, onNew }: Props) {
   if (notes.length === 0) {
     return (
       <div className="text-center py-20">
-        <FileText className="w-10 h-10 mx-auto text-gray-600 mb-4" />
+        <FileText className="w-12 h-12 mx-auto text-gray-600 mb-4 mt-10" />
         <p className="text-gray-400 mb-4">No notes yet</p>
         <button onClick={onNew} className="bg-blue-600 px-6 py-2 rounded">
           + Create Note

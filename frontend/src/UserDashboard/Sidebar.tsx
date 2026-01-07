@@ -34,7 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewNote }) => {
           </svg>
         </div>
         <span className="text-2xl font-bold text-white tracking-tight">
-          SmartNotes
+          Smart Notes
         </span>
       </div>
 

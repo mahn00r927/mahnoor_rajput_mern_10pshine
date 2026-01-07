@@ -179,7 +179,7 @@ const RichTextEditor: React.FC = () => {
             contentEditable
             onClick={handleEditorClick}
             suppressContentEditableWarning
-            className="min-h-75 px-6 py-6 text-slate-300 outline-none editor-content"
+            className="min-h-100 px-6 py-6 text-slate-300 outline-none editor-content"
             style={{
               lineHeight: "1.6",
             }}
