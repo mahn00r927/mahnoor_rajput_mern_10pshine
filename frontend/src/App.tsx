@@ -8,12 +8,11 @@ import { Footer } from "./PublicView/Footer";
 import { Login } from "./PublicView/LogIn";
 import { Signup } from "./PublicView/SignUp";
 import Sidebar from "./UserDashboard/Sidebar";
-
+import { ForgotPassword } from "./PublicView/ForgotPassword";
+import { ResetPassword } from "./PublicView/ResetPassword";
 function App() {
   return (
     <Router>
-     
-
       <Routes>
         {/* Home */}
         <Route
@@ -49,15 +48,18 @@ function App() {
           }
         />
 
-         {/* Dashboard */}
+        {/* Dashboard */}
         <Route
           path="/dashboard"
           element={
             <div className="app-container">
-              <Sidebar/>
+              <Sidebar />
             </div>
           }
         />
+        {/* Forgot Password */}
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
     </Router>
   );

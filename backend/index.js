@@ -7,6 +7,7 @@ const pinoHttp = require("pino-http");
 
 const authRoutes = require("./Routes/Auth");
 const logger = require("./Utils/logger");
+const forgotPasswordRoutes = require("./Routes/ForgotPassword");
 
 const noteRoutes = require("./Routes/Notes");
 const app = express();
@@ -24,6 +25,7 @@ app.use(
 /* ================= ROUTES ================= */
 app.use("/api/auth", authRoutes);
 app.use("/api/notes", noteRoutes);
+app.use("/api/forgot-password", forgotPasswordRoutes);
 app.get("/", (req, res) => {
   res.send("Server is running");
 });
@@ -40,6 +42,9 @@ app.use((err, req, res, next) => {
   );
 
   res.status(500).json({ message: "Internal Server Error" });
+});
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
 });
 
 /* ================= DB + SERVER ================= */
