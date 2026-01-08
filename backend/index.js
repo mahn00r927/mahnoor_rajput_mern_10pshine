@@ -8,9 +8,10 @@ const pinoHttp = require("pino-http");
 const authRoutes = require("./Routes/Auth");
 const logger = require("./Utils/logger");
 const forgotPasswordRoutes = require("./Routes/ForgotPassword");
-
+const protectedRoutes = require("./Routes/Protected");
 const app = express();
 
+let users = [];
 /* ================= MIDDLEWARES ================= */
 app.use(cors());
 app.use(express.json());
@@ -28,6 +29,8 @@ app.get("/", (req, res) => {
   res.send("Server is running");
 });
 
+// Protected route
+app.use("/protected", protectedRoutes);
 /* ================= GLOBAL ERROR HANDLER ================= */
 app.use((err, req, res, next) => {
   logger.error(
@@ -44,8 +47,10 @@ app.use((err, req, res, next) => {
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
+module.exports = app;
 
 /* ================= DB + SERVER ================= */
+
 const PORT = process.env.PORT || 5000;
 
 mongoose
@@ -60,3 +65,4 @@ mongoose
   .catch((err) => {
     logger.error(err, "❌ MongoDB connection failed");
   });
+

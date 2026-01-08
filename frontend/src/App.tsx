@@ -10,6 +10,7 @@ import { Signup } from "./PublicView/SignUp";
 import Sidebar from "./UserDashboard/Sidebar";
 import { ForgotPassword } from "./PublicView/ForgotPassword";
 import { ResetPassword } from "./PublicView/ResetPassword";
+import ProtectedRoute from "./ProtectedRoute";
 function App() {
   return (
     <Router>
@@ -53,7 +54,9 @@ function App() {
           path="/dashboard"
           element={
             <div className="app-container">
+              <ProtectedRoute>
               <Sidebar />
+              </ProtectedRoute>
             </div>
           }
         />

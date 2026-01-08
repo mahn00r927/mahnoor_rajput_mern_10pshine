@@ -2,53 +2,62 @@ import { useState } from "react";
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export  function Login() {
+export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+   const [error, setError] = useState("");
   const nav = useNavigate();
 
   const handleLogin = async () => {
-  if (!email || !password) {
-    alert("Please enter email and password");
-    return;
-  }
-
-  try {
-    const response = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    // Check if response is ok
-    if (!response.ok) {
-      const errorData = await response.json(); // Backend should send JSON errors
-      throw new Error(errorData.message || "Login failed");
+     setError("");
+    if (!email || !password) {
+      alert("Please enter email and password");
+      return;
     }
 
-    const data = await response.json();
-    console.log("Login Success:", data);
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    // Save JWT token in localStorage (or state)
-    localStorage.setItem("token", data.token);
+      // Check if response is ok
+      if (!response.ok) {
+        const errorData = await response.json(); // Backend should send JSON errors
+        throw new Error(errorData.message || "Login failed");
+      }
 
-    // Navigate to notes page
-    nav("/dashboard");
-  } catch (err: any) {
-    console.error("Error signing in:", err.message);
-    alert(err.message);
-  }
-};
+      const data = await response.json();
+      console.log("Login Success:", data);
 
+      // Save JWT token in localStorage (or state)
+      localStorage.setItem("token", data.token);
+
+      // Navigate to notes page
+      nav("/dashboard");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error("Error signing in:", err.message);
+         setError(err.message);
+        alert(err.message);
+      } else {
+        // fallback for non-Error values
+        console.error("Error signing in:", err);
+        setError("An unknown error occurred");
+        alert("An unknown error occurred");
+      }
+    }
+  };
 
   const handleGoBack = () => {
     window.history.back();
   };
 
-   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleLogin();
     }
@@ -61,7 +70,10 @@ export  function Login() {
         onClick={handleGoBack}
         className="fixed top-8 left-8 flex items-center gap-2 text-slate-400 hover:text-white transition-colors group"
       >
-        <ArrowLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
+        <ArrowLeft
+          size={24}
+          className="group-hover:-translate-x-1 transition-transform"
+        />
         <span className="text-sm font-medium">Back</span>
       </button>
 
@@ -69,12 +81,12 @@ export  function Login() {
         {/* Logo and Brand */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-linear-to-br from-blue-500 to-blue-600 rounded-2xl mb-4 shadow-lg shadow-blue-500/50">
-            <svg 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="white" 
-              strokeWidth="2.5" 
-              strokeLinecap="round" 
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="2.5"
+              strokeLinecap="round"
               strokeLinejoin="round"
               className="w-8 h-8"
             >
@@ -82,25 +94,36 @@ export  function Login() {
             </svg>
           </div>
           <h1 className="text-3xl font-bold text-white mb-1">Smart Notes</h1>
-          <p className="text-blue-300 text-sm">Your intelligent note-taking companion</p>
+          <p className="text-blue-300 text-sm">
+            Your intelligent note-taking companion
+          </p>
         </div>
 
         {/* Login Card */}
         <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-slate-700/50 p-8">
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-white mb-2">Welcome back</h2>
-            <p className="text-slate-400 text-sm">Sign in to continue to your notes</p>
+            <p className="text-slate-400 text-sm">
+              Sign in to continue to your notes
+            </p>
           </div>
-
+          {error && <p className="text-red-400 text-sm mb-4">{error}</p>} 
           <div className="space-y-5">
             {/* Email Field */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label
+                className="block text-sm font-medium text-slate-300 mb-2"
+                htmlFor="email"
+              >
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+                <Mail
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                  size={20}
+                />
                 <input
+                  id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -113,12 +136,19 @@ export  function Login() {
 
             {/* Password Field */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label
+                className="block text-sm font-medium text-slate-300 mb-2"
+                htmlFor="password"
+              >
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+                <Lock
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                  size={20}
+                />
                 <input
+                  id="password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -141,7 +171,7 @@ export  function Login() {
               <button
                 type="button"
                 className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
-                onClick={() => nav("/forgot-password")} 
+                onClick={() => nav("/forgot-password")}
               >
                 Forgot password?
               </button>
@@ -163,15 +193,15 @@ export  function Login() {
               <button
                 type="button"
                 className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
-                onClick={()=>{nav('/signup')}}
+                onClick={() => {
+                  nav("/signup");
+                }}
               >
                 Sign up
               </button>
             </p>
           </div>
         </div>
-
-       
       </div>
     </div>
   );
