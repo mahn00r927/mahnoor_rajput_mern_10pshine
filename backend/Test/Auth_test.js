@@ -96,3 +96,36 @@ describe("AUTH TESTS", function () {
   });
 
 });
+let resetToken;
+
+//=================================Forgot Password Tests=================================// 
+describe("Forgot Password API", () => {
+  it("should send reset password email", async () => {
+    const res = await chai
+      .request(app)
+      .post("/api/forgot-password/request-reset")
+      .send({ email: testUser.email });
+
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property("message");
+
+    // Get token from DB (assuming your User model stores it)
+    const user = await User.findOne({ email: testUser.email });
+    resetToken = user.resetPasswordToken; // depends on your schema
+    expect(resetToken).to.exist;
+  });
+});
+
+// //=================================Reset Password Tests=================================//  
+
+// describe("Reset Password API", () => {
+//   it("should reset password using token", async () => {
+//     const res = await chai
+//       .request(app)
+//       .post(`/api/forgot-password/reset`)
+//       .send({ password: "NewPassword123" });
+
+//     expect(res.status).to.equal(200);
+//     expect(res.body).to.have.property("message");
+//   });
+// });
