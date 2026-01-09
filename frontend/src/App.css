@@ -89,3 +89,11 @@ html {
 * {
   box-sizing: border-box;
 }
+
+
+/* 🔥 FORCE LTR FOR EDITOR */
+[contenteditable="true"] {
+  direction: ltr !important;
+  unicode-bidi: plaintext !important;
+  text-align: left !important;
+}

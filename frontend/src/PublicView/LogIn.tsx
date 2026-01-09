@@ -36,7 +36,7 @@ export function Login() {
 
       // Save JWT token in localStorage (or state)
       localStorage.setItem("token", data.token);
-
+    localStorage.setItem("user", JSON.stringify(data.user));
       // Navigate to notes page
       nav("/dashboard");
     } catch (err: unknown) {
