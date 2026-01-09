@@ -7,9 +7,10 @@ import { CTASection } from "./PublicView/CTA";
 import { Footer } from "./PublicView/Footer";
 import { Login } from "./PublicView/LogIn";
 import { Signup } from "./PublicView/SignUp";
-import Sidebar from "./UserDashboard/Sidebar";
 import { ForgotPassword } from "./PublicView/ForgotPassword";
 import { ResetPassword } from "./PublicView/ResetPassword";
+import Dashboard from "./UserDashboard/Dashboard";
+import Editor from "./UserDashboard/Editor";
 function App() {
   return (
     <Router>
@@ -53,13 +54,14 @@ function App() {
           path="/dashboard"
           element={
             <div className="app-container">
-              <Sidebar />
+              <Dashboard/>
             </div>
           }
         />
         {/* Forgot Password */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/editor" element={<Editor />} />
       </Routes>
     </Router>
   );
