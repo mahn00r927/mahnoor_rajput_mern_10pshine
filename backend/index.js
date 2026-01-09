@@ -9,6 +9,7 @@ const authRoutes = require("./Routes/Auth");
 const logger = require("./Utils/logger");
 const forgotPasswordRoutes = require("./Routes/ForgotPassword");
 
+const noteRoutes = require("./Routes/Notes");
 const app = express();
 
 /* ================= MIDDLEWARES ================= */
@@ -23,6 +24,7 @@ app.use(
 
 /* ================= ROUTES ================= */
 app.use("/api/auth", authRoutes);
+app.use("/api/notes", noteRoutes);
 app.use("/api/forgot-password", forgotPasswordRoutes);
 app.get("/", (req, res) => {
   res.send("Server is running");
