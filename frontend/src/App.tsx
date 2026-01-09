@@ -55,9 +55,8 @@ function App() {
           path="/dashboard"
           element={
             <div className="app-container">
-              <Dashboard/>
               <ProtectedRoute>
-              <Sidebar />
+              <Dashboard />
               </ProtectedRoute>
             </div>
           }
