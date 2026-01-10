@@ -45,7 +45,7 @@ describe("NOTES API TESTS", function () {
 
   // ================== CREATE NOTE TESTS ==================
 
-  // ✅ Create note successfully
+  // Create note successfully
   it("should create a new note", async function () {
     const res = await chai
       .request(app)
@@ -60,10 +60,10 @@ describe("NOTES API TESTS", function () {
     expect(res.body).to.have.property("_id");
     expect(res.body.title).to.equal("Test Note");
 
-    noteId = res.body._id; // save for update/delete tests
+    noteId = res.body._id; 
   });
 
-  // ❌ Create note without title/content
+  // Create note without title/content
   it("should fail to create note if fields are missing", async function () {
     const res = await chai
       .request(app)
@@ -75,7 +75,7 @@ describe("NOTES API TESTS", function () {
     expect(res.body.message).to.equal("All fields are required");
   });
 
-  // ❌ Create note without token
+  //  Create note without token
   it("should fail to create note without token", async function () {
     const res = await chai
       .request(app)
@@ -90,7 +90,7 @@ describe("NOTES API TESTS", function () {
 
   // ================== GET NOTES TESTS ==================
 
-  // ✅ Get all notes of logged-in user
+  //  Get all notes of logged-in user
   it("should get all notes for logged-in user", async function () {
     const res = await chai
       .request(app)
@@ -102,7 +102,7 @@ describe("NOTES API TESTS", function () {
     expect(res.body.length).to.be.greaterThan(0);
   });
 
-  // ❌ Get notes without token
+  //  Get notes without token
   it("should fail to get notes without token", async function () {
     const res = await chai
       .request(app)
@@ -113,7 +113,7 @@ describe("NOTES API TESTS", function () {
 
   // ================== UPDATE NOTE TESTS ==================
 
-  // ✅ Update note successfully
+  //  Update note successfully
   it("should update an existing note", async function () {
     const res = await chai
       .request(app)
@@ -128,7 +128,7 @@ describe("NOTES API TESTS", function () {
     expect(res.body.title).to.equal("Updated Title");
   });
 
-  // ❌ Update note with invalid ID
+  //  Update note with invalid ID
   it("should fail to update note if note not found", async function () {
     const res = await chai
       .request(app)
@@ -145,7 +145,7 @@ describe("NOTES API TESTS", function () {
 
   // ================== DELETE NOTE TESTS ==================
 
-  // ✅ Delete note successfully
+  //  Delete note successfully
   it("should delete a note", async function () {
     const res = await chai
       .request(app)
@@ -156,7 +156,7 @@ describe("NOTES API TESTS", function () {
     expect(res.body.message).to.equal("Note deleted successfully");
   });
 
-  // ❌ Delete already deleted note
+  //  Delete already deleted note
   it("should fail to delete note if not found", async function () {
     const res = await chai
       .request(app)

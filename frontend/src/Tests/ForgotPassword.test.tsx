@@ -214,7 +214,7 @@ describe("ForgotPassword Component", () => {
       };
       (global.fetch as any).mockResolvedValueOnce(mockResponse1);
 
-      const { rerender } = renderForgotPassword();
+      // const { rerender } = renderForgotPassword();
 
       const emailInput = screen.getByPlaceholderText("Enter your email");
       const submitButton = screen.getByRole("button", { name: /send reset link/i });

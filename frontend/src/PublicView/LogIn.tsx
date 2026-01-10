@@ -6,11 +6,11 @@ export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-   const [error, setError] = useState("");
+  const [error, setError] = useState("");
   const nav = useNavigate();
 
   const handleLogin = async () => {
-     setError("");
+    setError("");
     if (!email || !password) {
       alert("Please enter email and password");
       return;
@@ -27,7 +27,7 @@ export function Login() {
 
       // Check if response is ok
       if (!response.ok) {
-        const errorData = await response.json(); // Backend should send JSON errors
+        const errorData = await response.json();
         throw new Error(errorData.message || "Login failed");
       }
 
@@ -36,13 +36,13 @@ export function Login() {
 
       // Save JWT token in localStorage (or state)
       localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("user", JSON.stringify(data.user));
       // Navigate to notes page
       nav("/dashboard");
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error("Error signing in:", err.message);
-         setError(err.message);
+        setError(err.message);
         alert(err.message);
       } else {
         // fallback for non-Error values
@@ -107,7 +107,7 @@ export function Login() {
               Sign in to continue to your notes
             </p>
           </div>
-          {error && <p className="text-red-400 text-sm mb-4">{error}</p>} 
+          {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
           <div className="space-y-5">
             {/* Email Field */}
             <div>

@@ -14,7 +14,7 @@ describe("Auth Middleware Unit Tests", () => {
   // ================== NO TOKEN ==================
   it("should return 401 if no token is provided", () => {
     const req = {
-      headers: {} // 🔑 real express behavior
+      headers: {} 
     };
 
     const res = {

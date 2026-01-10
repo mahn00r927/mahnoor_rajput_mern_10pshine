@@ -9,7 +9,7 @@ describe("verifyToken Middleware Tests", () => {
   // ===== NO TOKEN =====
   it("should return 401 if token is missing", () => {
     const req = {
-      headers: {}   // ✅ FIX
+      headers: {}  
     };
 
     const res = {
@@ -70,7 +70,6 @@ describe("verifyToken Middleware Tests", () => {
 
   const res = {};
   const next = () => {
-    // Only check the id, ignore iat
     expect(req.user.id).to.equal(payload.id);
   };
 

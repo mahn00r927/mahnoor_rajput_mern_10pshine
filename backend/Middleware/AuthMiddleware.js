@@ -7,7 +7,7 @@ const authMiddleware = (req, res, next) => {
     const authHeader =
       req.headers?.authorization || req.header?.("Authorization");
 
-    // ❌ NO TOKEN
+    // NO TOKEN
     if (!authHeader) {
       logger.warn("Access denied: No token provided");
       return res.status(401).json({
@@ -29,7 +29,7 @@ const authMiddleware = (req, res, next) => {
 
     // ✅ VERIFY TOKEN
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { id }
+    req.user = decoded; 
 
     logger.info({ userId: decoded.id }, "Token verified successfully");
 

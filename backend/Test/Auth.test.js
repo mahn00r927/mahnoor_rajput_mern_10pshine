@@ -113,9 +113,9 @@ describe("Forgot Password API", () => {
     expect(res.status).to.equal(200);
     expect(res.body).to.have.property("message");
 
-    // Get token from DB (assuming your User model stores it)
+    // Get token from DB 
     const user = await User.findOne({ email: testUser.email });
-    resetToken = user.resetPasswordToken; // depends on your schema
+    resetToken = user.resetPasswordToken; 
     expect(resetToken).to.exist;
   });
 });

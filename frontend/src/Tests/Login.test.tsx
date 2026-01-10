@@ -416,7 +416,7 @@ describe('Login Component', () => {
       vi.mocked(global.fetch).mockResolvedValueOnce({
         ok: false,
         status: 500,
-        json: async () => ({}), // No message
+        json: async () => ({}),
       } as Response);
 
       render(

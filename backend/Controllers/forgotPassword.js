@@ -10,8 +10,8 @@ const sendEmail = async (to, subject, html) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: process.env.GMAIL_USER,         // aapka Gmail
-      pass: process.env.GMAIL_APP_PASSWORD, // Gmail App Password
+      user: process.env.GMAIL_USER,        
+      pass: process.env.GMAIL_APP_PASSWORD, 
     },
     logger: true,
     debug: true,
@@ -54,7 +54,7 @@ exports.requestPasswordReset = async (req, res) => {
     try {
       await sendEmail(user.email, "Password Reset", emailHtml);
     } catch (emailError) {
-      console.error("Email sending error:", emailError); // Exact Gmail/Nodemailer error
+      console.error("Email sending error:", emailError); 
       user.resetPasswordToken = undefined;
       user.resetPasswordExpires = undefined;
       await user.save();
