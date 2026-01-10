@@ -3,42 +3,35 @@ const logger = require("../Utils/logger");
 
 const authMiddleware = (req, res, next) => {
   try {
-    // ✅ Express-safe header access (real + tests)
-    const authHeader =
-      req.headers?.authorization || req.header?.("Authorization");
+    const authHeader = req.headers?.authorization || req.header?.("Authorization");
 
-    // NO TOKEN
     if (!authHeader) {
-      logger.warn("Access denied: No token provided");
-      return res.status(401).json({
-        message: "No token, authorization denied",
-      });
+      const error = new Error("No token, authorization denied");
+      error.statusCode = 401;
+      logger.warn(error.message);
+      return next(error);
     }
 
-    // ✅ Expect "Bearer <token>"
     const parts = authHeader.split(" ");
-
     if (parts.length !== 2 || parts[0] !== "Bearer") {
-      logger.warn("Access denied: Malformed token");
-      return res.status(401).json({
-        message: "No token, authorization denied",
-      });
+      const error = new Error("Malformed token");
+      error.statusCode = 401;
+      logger.warn(error.message);
+      return next(error);
     }
 
     const token = parts[1];
 
     // ✅ VERIFY TOKEN
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; 
+    req.user = decoded;
 
     logger.info({ userId: decoded.id }, "Token verified successfully");
-
-    return next();
+    next();
   } catch (error) {
-    logger.error(error, "Invalid token");
-    return res.status(401).json({
-      message: "Token is not valid",
-    });
+    logger.error(error, "Auth middleware error");
+    error.statusCode = 401; // Unauthorized
+    next(error); // Pass to global error handler
   }
 };
 
