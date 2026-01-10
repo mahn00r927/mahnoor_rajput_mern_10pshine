@@ -8,20 +8,21 @@ const expect = chai.expect;
 
 let token;
 
-// unique test user
+// ================== TEST USER DATA ==================
 const testUser = {
   name: "Test User",
   email: `test_${Date.now()}@gmail.com`,
   password: "123456",
 };
 
+// ================== AUTH TESTS ==================
 describe("AUTH TESTS", function () {
 
   // Clean DB before tests
   before(async function () {
     await User.deleteMany({});
   });
-
+ // ================== SIGNUP TESTS ==================
   it("should signup a new user", async function () {
     const res = await chai
       .request(app)
@@ -41,6 +42,8 @@ describe("AUTH TESTS", function () {
     expect(res).to.have.status(400);
     expect(res.body.message).to.equal("User already exists");
   });
+
+   // ================== LOGIN TESTS ==================
 
   it("should login user and return token", async function () {
     const res = await chai
@@ -68,6 +71,7 @@ describe("AUTH TESTS", function () {
 
     expect(res).to.have.status(401);
   });
+   // ================== PROTECTED ROUTE TESTS ==================
 
   it("should access protected route with valid token", async function () {
     const res = await chai
@@ -115,17 +119,3 @@ describe("Forgot Password API", () => {
     expect(resetToken).to.exist;
   });
 });
-
-// //=================================Reset Password Tests=================================//  
-
-// describe("Reset Password API", () => {
-//   it("should reset password using token", async () => {
-//     const res = await chai
-//       .request(app)
-//       .post(`/api/forgot-password/reset`)
-//       .send({ password: "NewPassword123" });
-
-//     expect(res.status).to.equal(200);
-//     expect(res.body).to.have.property("message");
-//   });
-// });
