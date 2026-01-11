@@ -13,7 +13,6 @@ const noteRoutes = require("./Routes/Notes");
 const errorHandler = require("./Middleware/ErrorMiddlware");
 const app = express()
 
-
 let users = [];
 /* ================= MIDDLEWARES ================= */
 app.use(cors());
@@ -61,3 +60,4 @@ mongoose
     logger.error(err, "❌ MongoDB connection failed");
   });
 
+module.exports = app ;

@@ -1,37 +1,35 @@
 const logger = require("../Utils/logger");
 const jwt = require("jsonwebtoken");
 
-module.exports = function (req, res, next) {
+const verifyToken = (req, res, next) => {
   try {
     const authHeader = req.headers["authorization"];
     if (!authHeader) {
-      const error = new Error("No token provided");
-      error.statusCode = 401;
       logger.warn("Auth failed: no token provided");
-      return next(error);
+      return res.status(401).json({ message: "Token is not valid" });
     }
 
-    const token = authHeader.split(" ")[1];
-    if (!token) {
-      const error = new Error("No token provided");
-      error.statusCode = 401;
-      logger.warn("Auth failed: token missing");
-      return next(error);
+    const parts = authHeader.split(" ");
+    if (parts.length !== 2 || parts[0] !== "Bearer") {
+      logger.warn("Auth failed: malformed token");
+      return res.status(401).json({ message: "Token is not valid" });
     }
+
+    const token = parts[1];
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
-        const error = new Error("Invalid token");
-        error.statusCode = 401;
-        logger.warn(err, "Auth failed: invalid token");
-        return next(error);
+        logger.warn(`Auth failed: invalid token - ${err.message}`);
+        return res.status(401).json({ message: "Token is not valid" });
       }
 
       req.user = decoded;
-      next();
+      next(); // Only call next() if token is valid
     });
   } catch (err) {
-    logger.error(err, "Auth middleware error");
-    next(err); 
+    logger.error(`VerifyToken middleware error: ${err.message}`);
+    return res.status(500).json({ message: "Server error" });
   }
 };
+
+module.exports = verifyToken;

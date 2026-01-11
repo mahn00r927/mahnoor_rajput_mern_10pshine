@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const logger = require("./../Utils/logger");
 const asyncHandler = require("../Utils/asyncHandler");
+
 // ================= SIGNUP CONTROLLER =================
 exports.signup = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
