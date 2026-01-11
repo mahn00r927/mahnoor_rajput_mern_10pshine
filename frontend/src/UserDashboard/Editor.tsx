@@ -54,10 +54,6 @@ const RichTextEditor: React.FC = () => {
     console.log("Saved:", { title, content });
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 2000);
-
-    // You can add your save logic here
-    // Example: send to backend API
-    // await fetch('/api/notes', { method: 'POST', body: JSON.stringify({ title, content }) });
   };
 
   const handleBack = () => {

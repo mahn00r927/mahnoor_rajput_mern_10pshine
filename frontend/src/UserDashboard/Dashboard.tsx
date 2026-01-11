@@ -15,7 +15,7 @@ export default function Dashboard() {
   };
 
   const handleEditNote = (note: Note) => {
-    // Pass note data via state
+    
     navigate("/editor", { state: { note } });
   };
 
