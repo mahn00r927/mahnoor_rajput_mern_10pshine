@@ -1,17 +1,28 @@
-import { useState } from "react";
 import { Plus, FolderOpen } from "lucide-react";
 
 interface SidebarProps {
   onNewNote: () => void;
+  folders: string[];
+  selectedFolder: string | null;
+  onSelectFolder: (folder: string | null) => void;
+  onDeleteFolder: (folder: string) => void; // NEW
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ onNewNote }) => {
-  const [folders, setFolders] = useState<string[]>([]);
+
+const Sidebar: React.FC<SidebarProps> = ({
+  onNewNote,
+  folders,
+  selectedFolder,
+  onSelectFolder,
+  onDeleteFolder, // NEW
+}) => {
 
   const handleAddFolder = (): void => {
     const folderName = prompt("Enter folder name");
     if (!folderName) return;
-    setFolders((prev) => [...prev, folderName]);
+    // Trigger a folder selection immediately
+    onSelectFolder(folderName);
+    // Optional: you may later save this folder to backend
   };
 
   return (
@@ -48,7 +59,11 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewNote }) => {
       </button>
 
       {/* All Notes */}
-      <button className="w-full bg-slate-800/50 hover:bg-slate-800 text-blue-400 font-medium py-3 rounded-lg transition-all duration-200 flex items-center gap-3 px-4 mb-6 border border-slate-700/50 hover:border-blue-500/50">
+      <button
+        className={`w-full bg-slate-800/50 hover:bg-slate-800 text-blue-400 font-medium py-3 rounded-lg transition-all duration-200 flex items-center gap-3 px-4 mb-6 border border-slate-700/50 hover:border-blue-500/50 ${selectedFolder === null ? "bg-blue-600 text-white" : ""
+          }`}
+        onClick={() => onSelectFolder(null)}
+      >
         <FolderOpen size={20} />
         All Notes
       </button>
@@ -74,11 +89,25 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewNote }) => {
             {folders.map((folder, index) => (
               <div
                 key={index}
-                className="text-slate-300 hover:text-white hover:bg-slate-800 py-2 px-3 rounded-lg cursor-pointer transition-all"
+                className={`flex justify-between items-center py-2 px-3 rounded-lg cursor-pointer transition-all ${selectedFolder === folder
+                    ? "bg-blue-600 text-white"
+                    : "text-slate-300 hover:text-white hover:bg-slate-800"
+                  }`}
               >
-                {folder}
+                <span onClick={() => onSelectFolder(folder)}>{folder}</span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent selecting folder
+                    onDeleteFolder(folder); // call Dashboard handler
+                  }}
+                  className="text-red-400 hover:text-red-600 text-sm px-2"
+                >
+                  Delete
+                </button>
               </div>
             ))}
+
+
           </div>
         )}
       </div>
@@ -86,7 +115,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewNote }) => {
       {/* Spacer */}
       <div className="grow" />
 
-      {/* Footer (optional) */}
+      {/* Footer */}
       <div className="text-xs text-slate-500 text-center">© Smart Notes</div>
     </aside>
   );

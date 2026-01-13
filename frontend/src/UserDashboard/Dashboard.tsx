@@ -12,6 +12,7 @@ export default function Dashboard() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
 
   // 🔐 fetch notes from backend
   const fetchNotes = async () => {
@@ -36,7 +37,6 @@ export default function Dashboard() {
     }
   };
 
-  // load notes on mount
   useEffect(() => {
     fetchNotes();
   }, []);
@@ -46,36 +46,78 @@ export default function Dashboard() {
   };
 
   const handleEditNote = (note: Note) => {
-    
     navigate("/editor", { state: { note } });
   };
 
-  // 🗑️ delete note (backend + frontend sync)
   const handleDeleteNote = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
 
       await fetch(`${BASE_URL}/notes/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      // update UI
       setNotes((prev) => prev.filter((n) => n._id !== id));
     } catch (err) {
       console.error("Delete failed", err);
     }
   };
 
-  const filteredNotes = notes.filter((n) =>
-    n.title.toLowerCase().includes(search.toLowerCase())
+  // Filter notes by folder first
+  const notesByFolder = selectedFolder
+    ? notes.filter((n) => n.folder === selectedFolder)
+    : notes;
+
+  // Then filter by search
+  const filteredNotes = notesByFolder.filter(
+    (n) =>
+      n.title.toLowerCase().includes(search.toLowerCase()) ||
+      n.content.toLowerCase().includes(search.toLowerCase())
   );
+
+  // All unique folders for Sidebar
+  const uniqueFolders = Array.from(
+    new Set(notes.map((n) => n.folder).filter((f): f is string => !!f))
+  );
+
+  const handleDeleteFolder = (folder: string) => {
+    // Move all notes in this folder to "Default"
+    const updatedNotes = notes.map((n) =>
+      n.folder === folder ? { ...n, folder: "Default" } : n
+    );
+    setNotes(updatedNotes);
+
+    // reset selected folder if it was deleted
+    if (selectedFolder === folder) setSelectedFolder(null);
+
+    // Optional: update backend
+    const token = localStorage.getItem("token");
+    updatedNotes.forEach(async (n) => {
+      if (n.folder === "Default") {
+        await fetch(`${BASE_URL}/notes/${n._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ folder: n.folder }),
+        });
+      }
+    });
+  };
+
 
   return (
     <div className="flex h-screen bg-gray-950 text-white">
-      <Sidebar onNewNote={handleNewNote} />
+      <Sidebar
+        onNewNote={handleNewNote}
+        folders={uniqueFolders}
+        selectedFolder={selectedFolder}
+        onSelectFolder={setSelectedFolder}
+        onDeleteFolder={handleDeleteFolder}
+      />
+
 
       <div className="flex-1 p-8">
         <TopBar searchQuery={search} setSearchQuery={setSearch} />

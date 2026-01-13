@@ -20,11 +20,9 @@ const BASE_URL = "http://localhost:5000/api";
 const RichTextEditor: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  // 👇 note dashboard se aata hai (edit mode)
   const note: Note | null = location.state?.note || null;
-
   const [title, setTitle] = useState("");
+  const [folder, setFolder] = useState(note?.folder || "Default");
   const [isSaved, setIsSaved] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
   const [showLinkModal, setShowLinkModal] = useState(false);
@@ -89,7 +87,7 @@ const RichTextEditor: React.FC = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ title, content }),
+          body: JSON.stringify({ title, content, folder }),
         }
       );
 
@@ -268,7 +266,25 @@ const RichTextEditor: React.FC = () => {
               icon={<AlignRight size={20} />}
               title="Align Right"
             />
+            <input
+              list="folders"
+              value={folder}
+              onChange={(e) => setFolder(e.target.value)}
+              placeholder="Select or type folder"
+              className="ml-4 bg-gray-800 text-white rounded px-2 py-1 text-sm"
+            />
+
+            <datalist id="folders">
+              <option value="Default" />
+              <option value="Work" />
+              <option value="Personal" />
+            </datalist>
+
+
+
+
           </div>
+
 
           {/* Editor Area */}
           <div

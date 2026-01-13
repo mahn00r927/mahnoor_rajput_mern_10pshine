@@ -11,11 +11,12 @@ const noteSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    folder: { type: String, default: "Default" },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true, 
-      
+      required: true,
+
     },
   },
   { timestamps: true }
