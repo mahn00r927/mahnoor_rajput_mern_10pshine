@@ -3,42 +3,38 @@ const logger = require("../Utils/logger");
 
 const authMiddleware = (req, res, next) => {
   try {
-    // ✅ Express-safe header access (real + tests)
-    const authHeader =
-      req.headers?.authorization || req.header?.("Authorization");
-
-    // NO TOKEN
+    const authHeader = req.headers?.authorization || req.header?.("Authorization");
+    
+    // No token case
     if (!authHeader) {
-      logger.warn("Access denied: No token provided");
-      return res.status(401).json({
-        message: "No token, authorization denied",
-      });
+      logger.warn("Auth failed: no token provided");
+      return res.status(401).json({ message: "No token, authorization denied" });
     }
 
-    // ✅ Expect "Bearer <token>"
+    // Malformed token case
     const parts = authHeader.split(" ");
-
     if (parts.length !== 2 || parts[0] !== "Bearer") {
-      logger.warn("Access denied: Malformed token");
-      return res.status(401).json({
-        message: "No token, authorization denied",
-      });
+      logger.warn("Auth failed: malformed token");
+      return res.status(401).json({ message: "Malformed token" });
     }
 
+    // Verify token SYNCHRONOUSLY (no callback)
     const token = parts[1];
-
-    // ✅ VERIFY TOKEN
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; 
-
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // ← Synchronous!
+    
+    req.user = decoded;
     logger.info({ userId: decoded.id }, "Token verified successfully");
-
-    return next();
+    next(); // Success case - call next()
+    
   } catch (error) {
-    logger.error(error, "Invalid token");
-    return res.status(401).json({
-      message: "Token is not valid",
-    });
+    // JWT verification errors OR other errors
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+      logger.warn({ err: error }, "Auth failed: invalid token");
+      return res.status(401).json({ message: "Token is not valid" });
+    }
+    
+    logger.error({ err: error }, "Auth middleware unexpected error");
+    return res.status(500).json({ message: "Server error" });
   }
 };
 

@@ -1,6 +1,6 @@
 import { Search } from "lucide-react";
 import UserAvatar from "./Avatar";
-
+import { useNavigate } from "react-router-dom";
 interface Props {
   searchQuery: string;
   setSearchQuery: (v: string) => void;
@@ -8,7 +8,7 @@ interface Props {
 
 export default function TopBar({ searchQuery, setSearchQuery }: Props) {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
-
+  const navigate = useNavigate();
   return (
     <div className="flex items-center justify-between gap-4 mb-8">
       <div className="relative flex-1 max-w-2xl">
@@ -26,7 +26,7 @@ export default function TopBar({ searchQuery, setSearchQuery }: Props) {
         email={user.email}
         onLogout={() => {
           localStorage.clear();
-          window.location.href = "/login";
+          navigate("/login", { replace: true });
         }}
       />
     </div>
