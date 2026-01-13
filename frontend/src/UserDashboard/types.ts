@@ -1,9 +1,12 @@
 export type ViewMode = "list" | "editor";
 
 export interface Note {
-  id: number;
+  _id: string;
   title: string;
   content: string;
-  folder: string;
-  createdAt: string;
+
+  // optional fields (backend safe)
+  folder?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

@@ -26,7 +26,7 @@ export const Navbar: React.FC = () => {
               </svg>
             </div>
             <span className="text-2xl font-bold text-white tracking-tight">
-              SmartNotes
+              Smart Notes
             </span>
           </div>
 

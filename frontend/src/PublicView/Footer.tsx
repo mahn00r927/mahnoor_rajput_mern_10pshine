@@ -22,7 +22,7 @@ export const Footer: React.FC = () => {
             </div>
             <div>
               <span className="text-xl font-bold text-white block">
-                SmartNotes
+                Smart Notes
               </span>
               <p className="text-white mt-1">Smarter notes, better ideas</p>
             </div>
