@@ -19,9 +19,9 @@ const testUser = {
 describe("AUTH TESTS", function () {
 
   // Clean DB before tests
-  before(async function () {
-    await User.deleteMany({});
-  });
+  // before(async function () {
+  //   await User.deleteMany({});
+  // });
  // ================== SIGNUP TESTS ==================
   it("should signup a new user", async function () {
     const res = await chai
