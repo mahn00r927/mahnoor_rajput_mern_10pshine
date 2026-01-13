@@ -53,6 +53,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         />
         <button
           type="button"
+           aria-label={showPassword ? "Hide password" : "Show password"}
           onClick={() => setShowPassword(!showPassword)}
           className="absolute right-3 top-3 text-slate-400"
         >

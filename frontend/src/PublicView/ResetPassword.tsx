@@ -5,7 +5,7 @@ import { Lock, Eye, EyeOff, CheckCircle, AlertCircle } from "lucide-react";
 export function ResetPassword() {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
-  
+
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -52,24 +52,25 @@ export function ResetPassword() {
       });
 
       const data = await res.json();
-      
+
       if (res.ok) {
-        setIsSuccess(true);
+        setIsSuccess(true); // Set success state immediately
         setTimeout(() => {
           navigate("/login");
         }, 2000);
       } else {
         setError(data.message || "Failed to reset password");
+        setIsLoading(false);
       }
     } catch (err) {
       console.error(err);
       setError("Something went wrong. Please try again.");
-    } finally {
       setIsLoading(false);
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+  // Changed from onKeyPress to onKeyDown for consistency
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === 'Enter') {
       handleReset();
     }
@@ -77,7 +78,7 @@ export function ResetPassword() {
 
   const getPasswordStrength = (password: string): { strength: string; color: string; width: string } => {
     if (!password) return { strength: "", color: "", width: "0%" };
-    
+
     let score = 0;
     if (password.length >= 8) score++;
     if (/[A-Z]/.test(password)) score++;
@@ -100,16 +101,16 @@ export function ResetPassword() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-6">
               <CheckCircle className="w-8 h-8 text-green-400" />
             </div>
-            
+
             <h1 className="text-3xl font-bold text-white mb-3">
               Password Reset Successfully!
             </h1>
-            
+
             <p className="text-slate-400 mb-8 leading-relaxed">
               Your password has been reset successfully.<br />
               Redirecting you to sign in...
             </p>
-            
+
             <div className="flex justify-center">
               <svg className="animate-spin h-8 w-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -156,7 +157,7 @@ export function ResetPassword() {
                 placeholder="Enter new password"
                 value={newPassword}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyDown}
                 className="w-full bg-slate-700/50 border border-slate-600 text-white placeholder-slate-400 rounded-2xl py-4 pl-12 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
               />
               <button
@@ -167,21 +168,20 @@ export function ResetPassword() {
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
-            
+
             {newPassword && (
               <div className="mt-3">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm text-slate-400">Password strength:</span>
-                  <span className={`text-sm font-medium ${
-                    passwordStrength.strength === "Weak" ? "text-red-400" :
-                    passwordStrength.strength === "Medium" ? "text-yellow-400" :
-                    "text-green-400"
-                  }`}>
+                  <span className={`text-sm font-medium ${passwordStrength.strength === "Weak" ? "text-red-400" :
+                      passwordStrength.strength === "Medium" ? "text-yellow-400" :
+                        "text-green-400"
+                    }`}>
                     {passwordStrength.strength}
                   </span>
                 </div>
                 <div className="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
-                  <div 
+                  <div
                     className={`h-full ${passwordStrength.color} transition-all duration-300`}
                     style={{ width: passwordStrength.width }}
                   ></div>
@@ -204,7 +204,7 @@ export function ResetPassword() {
                 placeholder="Confirm new password"
                 value={confirmPassword}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyDown}
                 className="w-full bg-slate-700/50 border border-slate-600 text-white placeholder-slate-400 rounded-2xl py-4 pl-12 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
               />
               <button
