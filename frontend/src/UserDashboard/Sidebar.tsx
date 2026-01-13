@@ -87,7 +87,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewNote }) => {
       <div className="grow" />
 
       {/* Footer (optional) */}
-      <div className="text-xs text-slate-500 text-center">© SmartNotes</div>
+      <div className="text-xs text-slate-500 text-center">© Smart Notes</div>
     </aside>
   );
 };

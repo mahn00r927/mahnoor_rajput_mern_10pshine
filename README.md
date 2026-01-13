@@ -1,48 +1,60 @@
-# Project Name
+## Project Name
+
 Smart Notes
 
-## Description
-This is a web-based note-taking application that allows users to create, edit, update, and delete notes securely. Each user has their own private workspace, protected through user authentication, ensuring notes are only accessible to the logged-in user.
+## 📄 Description
 
-The application follows good software practices, including application logging, exception handling, and unit testing to ensure reliability and maintainability. It is connected to a database (MongoDB) for persistent data storage and efficient note management.
+Smart Notes is a web-based note-taking application that allows users to securely create, edit, update, and delete their personal notes. Each user has a private workspace protected by authentication, ensuring that notes are accessible only to the logged-in user.
 
-Key Features
+The application is built following industry-standard software engineering practices, including structured logging, centralized exception handling, and unit testing to ensure high reliability, maintainability, and scalability. Data is stored persistently using MongoDB, enabling efficient and secure note management.
 
-User authentication (login & signup)
+## ✨ Key Features
+
+User authentication (Sign up & Login using JWT)
 
 Create, edit, update, and delete notes
 
-Private notes per user
+Notes are private and user-specific
 
-Database integration (MongoDB)
+Secure backend APIs
 
-Logging and exception handling
+Database integration with MongoDB
 
-Unit testing support
+Structured logging using Pino Logger
+
+Centralized error and exception handling
+
+Unit and API testing using Mocha & Chai
 
 ## 🛠 Technologies Used
-Frontend
+## Frontend
 
-React
+    React
 
-TypeScript
+    TypeScript
 
-Tailwind CSS
+    Tailwind CSS
 
-Backend
+## Backend
 
-Node.js
+    Node.js
 
-Express.js
+    Express.js
 
-Database
+    Database
 
-MongoDB / SQL
+    MongoDB
 
-Authentication
+    Authentication
 
-JWT
+    JSON Web Tokens (JWT)
 
-Tools
+## Logging
 
-Git & GitHub
+    Pino Logger (for high-performance application logging)
+
+## Testing
+
+    Mocha (test runner)
+
+    Chai (assertion library)

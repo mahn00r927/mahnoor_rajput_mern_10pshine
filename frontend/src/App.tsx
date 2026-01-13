@@ -11,6 +11,7 @@ import { ForgotPassword } from "./PublicView/ForgotPassword";
 import { ResetPassword } from "./PublicView/ResetPassword";
 import Dashboard from "./UserDashboard/Dashboard";
 import Editor from "./UserDashboard/Editor";
+import ProtectedRoute from "./ProtectedRoute";
 function App() {
   return (
     <Router>
@@ -54,7 +55,9 @@ function App() {
           path="/dashboard"
           element={
             <div className="app-container">
-              <Dashboard/>
+              <ProtectedRoute>
+              <Dashboard />
+              </ProtectedRoute>
             </div>
           }
         />
@@ -62,6 +65,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/editor" element={<Editor />} />
+        
       </Routes>
     </Router>
   );

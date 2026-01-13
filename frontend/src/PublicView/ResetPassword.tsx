@@ -260,18 +260,6 @@ export function ResetPassword() {
               'Reset Password'
             )}
           </button>
-
-          {/* <div className="text-center">
-            <p className="text-slate-400">
-              Remember your password?{' '}
-              <button
-                onClick={() => navigate("/login")}
-                className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
-              >
-                Sign in
-              </button>
-            </p>
-          </div> */}
         </div>
       </div>
     </div>

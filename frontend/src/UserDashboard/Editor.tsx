@@ -12,8 +12,18 @@ import {
   AlignRight,
   Link
 } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
+import type { Note } from "./types";
+
+const BASE_URL = "http://localhost:5000/api";
 
 const RichTextEditor: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // 👇 note dashboard se aata hai (edit mode)
+  const note: Note | null = location.state?.note || null;
+
   const [title, setTitle] = useState("");
   const [isSaved, setIsSaved] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
@@ -22,24 +32,29 @@ const RichTextEditor: React.FC = () => {
   const [linkText, setLinkText] = useState("");
   const savedSelection = useRef<Range | null>(null);
 
+  /* ================= LOAD NOTE (EDIT / NEW) ================= */
   useEffect(() => {
-    if (editorRef.current && editorRef.current.innerHTML === "") {
+    if (note) {
+      setTitle(note.title);
+      if (editorRef.current) {
+        editorRef.current.innerHTML = note.content || "<p><br></p>";
+      }
+    } else if (editorRef.current && editorRef.current.innerHTML === "") {
       editorRef.current.innerHTML = "<p><br></p>";
     }
-  }, []);
+  }, [note]);
 
+  /* ================= TEXT COMMANDS (UNCHANGED) ================= */
   const executeCommand = (
     command: string,
     value: string | undefined = undefined
   ) => {
     editorRef.current?.focus();
 
-    // Special handling for lists to ensure they work properly
     if (command === "insertUnorderedList" || command === "insertOrderedList") {
       const selection = window.getSelection();
       if (selection && selection.rangeCount > 0) {
         document.execCommand(command, false, value);
-        // Force a re-render to ensure the list is visible
         setTimeout(() => {
           if (editorRef.current) {
             const range = selection.getRangeAt(0);
@@ -54,27 +69,57 @@ const RichTextEditor: React.FC = () => {
     }
   };
 
-  const handleSave = () => {
+  /* ================= SAVE (BACKEND CONNECTED) ================= */
+  const handleSave = async () => {
     const content = editorRef.current?.innerHTML || "";
+
+    if (!title.trim()) {
+      alert("Title is required");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const res = await fetch(
+        note ? `${BASE_URL}/notes/${note._id}` : `${BASE_URL}/notes`,
+        {
+          method: note ? "PUT" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ title, content }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Save failed");
+
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 2000);
+
+      // 👈 back to dashboard after save
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 500);
+    } catch (err) {
+      console.error(err);
+      alert("Error saving note");
+    }
     console.log("Saved:", { title, content });
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 2000);
-
-    // You can add your save logic here
-    // Example: send to backend API
-    // await fetch('/api/notes', { method: 'POST', body: JSON.stringify({ title, content }) });
   };
 
   const handleBack = () => {
-    window.history.back();
+    navigate("/dashboard");
   };
 
   const handleEditorClick = () => {
-    if (editorRef.current) {
-      editorRef.current.focus();
-    }
+    editorRef.current?.focus();
   };
 
+  /* ================= UI (UNCHANGED) ================= */
   const ToolbarButton: React.FC<{
     onClick: () => void;
     icon: React.ReactNode;
@@ -84,7 +129,7 @@ const RichTextEditor: React.FC = () => {
       type="button"
       onClick={onClick}
       title={title}
-      onMouseDown={(e) => e.preventDefault()} // Prevent losing focus
+      onMouseDown={(e) => e.preventDefault()}
       className="p-2 hover:bg-slate-700 rounded transition-colors duration-200 text-slate-300 hover:text-white"
     >
       {icon}
