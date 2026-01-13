@@ -46,6 +46,7 @@ export default function Dashboard() {
   };
 
   const handleEditNote = (note: Note) => {
+    
     navigate("/editor", { state: { note } });
   };
 

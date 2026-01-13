@@ -101,6 +101,9 @@ const RichTextEditor: React.FC = () => {
       console.error(err);
       alert("Error saving note");
     }
+    console.log("Saved:", { title, content });
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 2000);
   };
 
   const handleBack = () => {
