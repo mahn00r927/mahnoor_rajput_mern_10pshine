@@ -4,7 +4,7 @@ const asyncHandler = require("../Utils/asyncHandler");
 
 // CREATE NOTE
 exports.createNote = asyncHandler(async (req, res) => {
-  const { title, content } = req.body;
+  const { title, content, folder } = req.body;
 
   if (!title || !content) {
     const error = new Error("All fields are required");
@@ -15,6 +15,7 @@ exports.createNote = asyncHandler(async (req, res) => {
   const note = await Note.create({
     title,
     content,
+    folder: folder || "Default",
     user: req.user.id,
   });
 

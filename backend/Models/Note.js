@@ -11,7 +11,7 @@ const noteSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    folder: { type: String, default: "Default" },
+    folder: { type: String },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
