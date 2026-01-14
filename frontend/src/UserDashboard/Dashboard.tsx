@@ -13,6 +13,7 @@ export default function Dashboard() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
+  
 
   // 🔐 fetch notes from backend
   const fetchNotes = async () => {
@@ -42,8 +43,9 @@ export default function Dashboard() {
   }, []);
 
   const handleNewNote = () => {
-    navigate("/editor");
-  };
+  navigate("/editor", { state: { folder: selectedFolder || "Default" } });
+};
+
 
   const handleEditNote = (note: Note) => {
     navigate("/editor", { state: { note } });
@@ -81,31 +83,33 @@ export default function Dashboard() {
     new Set(notes.map((n) => n.folder).filter((f): f is string => !!f))
   );
 
-  const handleDeleteFolder = (folder: string) => {
-    // Move all notes in this folder to "Default"
-    const updatedNotes = notes.map((n) =>
+  const handleDeleteFolder = async (folder: string) => {
+  const token = localStorage.getItem("token");
+
+  const affectedNotes = notes.filter((n) => n.folder === folder);
+
+  // frontend update
+  setNotes((prev) =>
+    prev.map((n) =>
       n.folder === folder ? { ...n, folder: "Default" } : n
-    );
-    setNotes(updatedNotes);
+    )
+  );
 
-    // reset selected folder if it was deleted
-    if (selectedFolder === folder) setSelectedFolder(null);
+  if (selectedFolder === folder) setSelectedFolder(null);
 
-    // Optional: update backend
-    const token = localStorage.getItem("token");
-    updatedNotes.forEach(async (n) => {
-      if (n.folder === "Default") {
-        await fetch(`${BASE_URL}/notes/${n._id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ folder: n.folder }),
-        });
-      }
+  // backend update
+  for (const note of affectedNotes) {
+    await fetch(`${BASE_URL}/notes/${note._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ folder: "Default" }),
     });
-  };
+  }
+};
+
 
 
   return (

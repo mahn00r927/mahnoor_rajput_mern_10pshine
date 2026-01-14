@@ -21,8 +21,11 @@ const RichTextEditor: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const note: Note | null = location.state?.note || null;
+  // const initialFolder = note?.folder || location.state?.folder || "Default";
+
+
+
   const [title, setTitle] = useState("");
-  const [folder, setFolder] = useState(note?.folder || "Default");
   const [isSaved, setIsSaved] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
   const [showLinkModal, setShowLinkModal] = useState(false);
@@ -30,17 +33,30 @@ const RichTextEditor: React.FC = () => {
   const [linkText, setLinkText] = useState("");
   const savedSelection = useRef<Range | null>(null);
 
+
+  const [folder, setFolder] = useState<string>(
+    note?.folder || location.state?.folder || "Default"
+  );
+
+
   /* ================= LOAD NOTE (EDIT / NEW) ================= */
   useEffect(() => {
-    if (note) {
-      setTitle(note.title);
-      if (editorRef.current) {
-        editorRef.current.innerHTML = note.content || "<p><br></p>";
-      }
-    } else if (editorRef.current && editorRef.current.innerHTML === "") {
+  if (note) {
+    setTitle(note.title);
+    setFolder(note.folder || "Default");
+
+    if (editorRef.current) {
+      editorRef.current.innerHTML = note.content || "<p><br></p>";
+    }
+  } else {
+    // 👇 ONLY set default once
+    setFolder((prev) => prev || "Default");
+
+    if (editorRef.current && editorRef.current.innerHTML === "") {
       editorRef.current.innerHTML = "<p><br></p>";
     }
-  }, [note]);
+  }
+}, [note]);
 
   /* ================= TEXT COMMANDS (UNCHANGED) ================= */
   const executeCommand = (
@@ -273,15 +289,6 @@ const RichTextEditor: React.FC = () => {
               placeholder="Select or type folder"
               className="ml-4 bg-gray-800 text-white rounded px-2 py-1 text-sm"
             />
-
-            <datalist id="folders">
-              <option value="Default" />
-              <option value="Work" />
-              <option value="Personal" />
-            </datalist>
-
-
-
 
           </div>
 
