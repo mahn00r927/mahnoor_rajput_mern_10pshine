@@ -10,6 +10,7 @@ import {
   AlignLeft,
   AlignCenter,
   AlignRight,
+  Link
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { Note } from "./types";
@@ -19,25 +20,43 @@ const BASE_URL = "http://localhost:5000/api";
 const RichTextEditor: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  // 👇 note dashboard se aata hai (edit mode)
   const note: Note | null = location.state?.note || null;
+  // const initialFolder = note?.folder || location.state?.folder || "Default";
+
+
 
   const [title, setTitle] = useState("");
   const [isSaved, setIsSaved] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
+  const [showLinkModal, setShowLinkModal] = useState(false);
+  const [linkUrl, setLinkUrl] = useState("");
+  const [linkText, setLinkText] = useState("");
+  const savedSelection = useRef<Range | null>(null);
+
+
+  const [folder, setFolder] = useState<string>(
+    note?.folder || location.state?.folder || "Default"
+  );
+
 
   /* ================= LOAD NOTE (EDIT / NEW) ================= */
   useEffect(() => {
-    if (note) {
-      setTitle(note.title);
-      if (editorRef.current) {
-        editorRef.current.innerHTML = note.content || "<p><br></p>";
-      }
-    } else if (editorRef.current && editorRef.current.innerHTML === "") {
+  if (note) {
+    setTitle(note.title);
+    setFolder(note.folder || "Default");
+
+    if (editorRef.current) {
+      editorRef.current.innerHTML = note.content || "<p><br></p>";
+    }
+  } else {
+    // 👇 ONLY set default once
+    setFolder((prev) => prev || "Default");
+
+    if (editorRef.current && editorRef.current.innerHTML === "") {
       editorRef.current.innerHTML = "<p><br></p>";
     }
-  }, [note]);
+  }
+}, [note]);
 
   /* ================= TEXT COMMANDS (UNCHANGED) ================= */
   const executeCommand = (
@@ -84,7 +103,7 @@ const RichTextEditor: React.FC = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ title, content }),
+          body: JSON.stringify({ title, content, folder }),
         }
       );
 
@@ -130,6 +149,48 @@ const RichTextEditor: React.FC = () => {
       {icon}
     </button>
   );
+  const handleLinkClick = () => {
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      savedSelection.current = selection.getRangeAt(0).cloneRange();
+      const selectedText = selection.toString();
+      setLinkText(selectedText);
+      setLinkUrl("");
+      setShowLinkModal(true);
+    }
+  };
+
+  const insertLink = () => {
+    if (!linkUrl) return;
+
+    if (savedSelection.current) {
+      const selection = window.getSelection();
+      if (selection) {
+        selection.removeAllRanges();
+        selection.addRange(savedSelection.current);
+      }
+    }
+
+    if (linkText && !window.getSelection()?.toString()) {
+      document.execCommand("insertText", false, linkText);
+      const selection = window.getSelection();
+      if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        range.setStart(range.endContainer, range.endOffset - linkText.length);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    }
+
+    const url = linkUrl.match(/^https?:\/\//) ? linkUrl : `https://${linkUrl}`;
+    document.execCommand("createLink", false, url);
+
+    setShowLinkModal(false);
+    setLinkUrl("");
+    setLinkText("");
+    savedSelection.current = null;
+    editorRef.current?.focus();
+  };
   return (
     <div className="min-h-screen bg-[#0a0e1a] text-white">
       {/* Header */}
@@ -144,11 +205,10 @@ const RichTextEditor: React.FC = () => {
 
         <button
           onClick={handleSave}
-          className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all duration-200 ${
-            isSaved
-              ? "bg-green-600 hover:bg-green-700"
-              : "bg-blue-600 hover:bg-blue-700"
-          }`}
+          className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all duration-200 ${isSaved
+            ? "bg-green-600 hover:bg-green-700"
+            : "bg-blue-600 hover:bg-blue-700"
+            }`}
         >
           <Save size={18} />
           <span>{isSaved ? "Saved!" : "Save"}</span>
@@ -184,6 +244,13 @@ const RichTextEditor: React.FC = () => {
               icon={<Underline size={20} />}
               title="Underline (Ctrl+U)"
             />
+            <div className="w-px h-6 bg-slate-700 mx-2" />
+
+            <ToolbarButton
+              onClick={handleLinkClick}
+              icon={<Link size={20} />}
+              title="Insert Link (Ctrl+K)"
+            />
 
             <div className="w-px h-6 bg-slate-700 mx-2" />
 
@@ -215,7 +282,16 @@ const RichTextEditor: React.FC = () => {
               icon={<AlignRight size={20} />}
               title="Align Right"
             />
+            <input
+              list="folders"
+              value={folder}
+              onChange={(e) => setFolder(e.target.value)}
+              placeholder="Select or type folder"
+              className="ml-4 bg-gray-800 text-white rounded px-2 py-1 text-sm"
+            />
+
           </div>
+
 
           {/* Editor Area */}
           <div
@@ -233,11 +309,73 @@ const RichTextEditor: React.FC = () => {
         {/* Helper Text */}
         <div className="mt-4 text-center text-slate-500 text-sm">
           <p>
-            Use keyboard shortcuts: Ctrl+B (Bold), Ctrl+I (Italic), Ctrl+U
-            (Underline)
+            Use keyboard shortcuts: Ctrl+B (Bold), Ctrl+I (Italic), Ctrl+U (Underline), Ctrl+K (Link)
           </p>
         </div>
       </div>
+      {/* Link Modal */}
+      {showLinkModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-[#1a2332] rounded-lg p-6 w-full max-w-md border border-slate-700">
+            <h3 className="text-xl font-semibold mb-4 text-slate-200">
+              Insert Link
+            </h3>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm text-slate-400 mb-2">
+                  Link Text
+                </label>
+                <input
+                  type="text"
+                  value={linkText}
+                  onChange={(e) => setLinkText(e.target.value)}
+                  placeholder="Text to display"
+                  className="w-full px-4 py-2 bg-[#0a0e1a] border border-slate-700 rounded text-slate-300 placeholder-slate-600 outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-slate-400 mb-2">
+                  URL
+                </label>
+                <input
+                  type="text"
+                  value={linkUrl}
+                  onChange={(e) => setLinkUrl(e.target.value)}
+                  placeholder="https://example.com"
+                  className="w-full px-4 py-2 bg-[#0a0e1a] border border-slate-700 rounded text-slate-300 placeholder-slate-600 outline-none focus:border-blue-500"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      insertLink();
+                    }
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={insertLink}
+                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-medium transition-colors duration-200"
+              >
+                Insert
+              </button>
+              <button
+                onClick={() => {
+                  setShowLinkModal(false);
+                  setLinkUrl("");
+                  setLinkText("");
+                  savedSelection.current = null;
+                }}
+                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded font-medium transition-colors duration-200"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`
         .editor-content {
@@ -306,6 +444,15 @@ const RichTextEditor: React.FC = () => {
           visibility: visible !important;
           opacity: 1 !important;
         }
+          .editor-content a {
+  color: #60a5fa;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.editor-content a:hover {
+  color: #93c5fd;
+}
       `}</style>
     </div>
   );

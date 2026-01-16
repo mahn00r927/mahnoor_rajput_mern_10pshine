@@ -12,6 +12,8 @@ export default function Dashboard() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
+  
 
   // 🔐 fetch notes from backend
   const fetchNotes = async () => {
@@ -36,46 +38,90 @@ export default function Dashboard() {
     }
   };
 
-  // load notes on mount
   useEffect(() => {
     fetchNotes();
   }, []);
 
   const handleNewNote = () => {
-    navigate("/editor");
-  };
+  navigate("/editor", { state: { folder: selectedFolder || "Default" } });
+};
+
 
   const handleEditNote = (note: Note) => {
-    
     navigate("/editor", { state: { note } });
   };
 
-  // 🗑️ delete note (backend + frontend sync)
   const handleDeleteNote = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
 
       await fetch(`${BASE_URL}/notes/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      // update UI
       setNotes((prev) => prev.filter((n) => n._id !== id));
     } catch (err) {
       console.error("Delete failed", err);
     }
   };
 
-  const filteredNotes = notes.filter((n) =>
-    n.title.toLowerCase().includes(search.toLowerCase())
+  // Filter notes by folder first
+  const notesByFolder = selectedFolder
+    ? notes.filter((n) => n.folder === selectedFolder)
+    : notes;
+
+  // Then filter by search
+  const filteredNotes = notesByFolder.filter(
+    (n) =>
+      n.title.toLowerCase().includes(search.toLowerCase()) ||
+      n.content.toLowerCase().includes(search.toLowerCase())
   );
+
+  // All unique folders for Sidebar
+  const uniqueFolders = Array.from(
+    new Set(notes.map((n) => n.folder).filter((f): f is string => !!f))
+  );
+
+  const handleDeleteFolder = async (folder: string) => {
+  const token = localStorage.getItem("token");
+
+  const affectedNotes = notes.filter((n) => n.folder === folder);
+
+  // frontend update
+  setNotes((prev) =>
+    prev.map((n) =>
+      n.folder === folder ? { ...n, folder: "Default" } : n
+    )
+  );
+
+  if (selectedFolder === folder) setSelectedFolder(null);
+
+  // backend update
+  for (const note of affectedNotes) {
+    await fetch(`${BASE_URL}/notes/${note._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ folder: "Default" }),
+    });
+  }
+};
+
+
 
   return (
     <div className="flex h-screen bg-gray-950 text-white">
-      <Sidebar onNewNote={handleNewNote} />
+      <Sidebar
+        onNewNote={handleNewNote}
+        folders={uniqueFolders}
+        selectedFolder={selectedFolder}
+        onSelectFolder={setSelectedFolder}
+        onDeleteFolder={handleDeleteFolder}
+      />
+
 
       <div className="flex-1 p-8">
         <TopBar searchQuery={search} setSearchQuery={setSearch} />
