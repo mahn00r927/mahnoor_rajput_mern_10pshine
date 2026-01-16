@@ -5,7 +5,6 @@ export interface Note {
   title: string;
   content: string;
 
-  // optional fields (backend safe)
   folder?: string;
   createdAt?: string;
   updatedAt?: string;
