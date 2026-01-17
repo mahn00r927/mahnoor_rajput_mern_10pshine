@@ -113,7 +113,7 @@ export default function Dashboard() {
 
 
   return (
-    <div className="flex h-180 bg-gray-950 text-white">
+    <div className="flex h-190 bg-gray-950 text-white">
       <Sidebar
         onNewNote={handleNewNote}
         folders={uniqueFolders}
