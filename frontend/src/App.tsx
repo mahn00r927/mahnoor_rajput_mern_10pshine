@@ -64,7 +64,9 @@ function App() {
         {/* Forgot Password */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route path="/editor" element={<Editor />} />
+        <Route path="/editor" element={ <div className="app-container">
+          <ProtectedRoute><Editor /></ProtectedRoute>
+        </div>} />
         
       </Routes>
     </Router>

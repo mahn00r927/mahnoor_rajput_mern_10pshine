@@ -26,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <aside className="w-80 h-screen bg-slate-900 border-r border-slate-800 flex flex-col p-4">
+    <aside className="w-80 h-180 bg-slate-900 border-r border-slate-800 flex flex-col p-4">
       {/* Logo */}
       <div className="flex items-center gap-3">
         <div className="bg-linear-to-br from-blue-500 to-blue-600 p-3 rounded-2xl shadow-lg shadow-blue-500/30">

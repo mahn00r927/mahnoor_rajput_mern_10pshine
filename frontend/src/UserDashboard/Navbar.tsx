@@ -25,6 +25,7 @@ export default function TopBar({ searchQuery, setSearchQuery }: Props) {
         name={user.name}
         email={user.email}
         onLogout={() => {
+          localStorage.removeItem("token");
           localStorage.clear();
           navigate("/login", { replace: true });
         }}
