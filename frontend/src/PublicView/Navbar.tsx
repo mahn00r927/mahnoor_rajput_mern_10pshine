@@ -6,26 +6,28 @@ export const Navbar: React.FC = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-linear-to-b from-black/80 to-transparent backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo  */}
-          <div className="flex items-center gap-3">
-            <div className="bg-linear-to-br from-blue-500 to-blue-600 p-3 rounded-2xl shadow-lg shadow-blue-500/30">
-              <svg 
-                className="w-6 h-6 text-white" 
-                fill="none" 
-                stroke="currentColor" 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between py-3 sm:py-4">
+          
+          {/* Logo */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="bg-linear-to-br from-blue-500 to-blue-600 p-2.5 sm:p-3 rounded-2xl shadow-lg shadow-blue-500/30">
+              <svg
+                className="w-5 h-5 sm:w-6 sm:h-6 text-white"
+                fill="none"
+                stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" 
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
                 />
               </svg>
             </div>
-            <span className="text-2xl font-bold text-white tracking-tight">
+
+            <span className="text-lg sm:text-2xl font-bold text-white tracking-tight whitespace-nowrap">
               Smart Notes
             </span>
           </div>
@@ -33,7 +35,14 @@ export const Navbar: React.FC = () => {
           {/* Sign In Button */}
           <button
             onClick={() => navigate('/login')}
-            className="bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-6 py-2.5 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/50"
+            className="bg-linear-to-r from-blue-500 to-blue-600 
+              hover:from-blue-600 hover:to-blue-700 
+              text-white font-semibold 
+              px-4 py-2 sm:px-6 sm:py-2.5 
+              rounded-full 
+              transition-all duration-300 
+              hover:scale-105 hover:shadow-lg hover:shadow-blue-500/50
+              text-sm sm:text-base"
           >
             Sign In
           </button>
