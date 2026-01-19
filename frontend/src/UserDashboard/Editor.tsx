@@ -29,6 +29,7 @@ const RichTextEditor: React.FC = () => {
   const [linkUrl, setLinkUrl] = useState("");
   const [linkText, setLinkText] = useState("");
   const savedSelection = useRef<Range | null>(null);
+  const [isPinned, setIsPinned] = useState(false);
 
   const [folder, setFolder] = useState<string>(
     note?.folder || location.state?.folder || "Default"
@@ -93,7 +94,7 @@ const RichTextEditor: React.FC = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ title, content, folder }),
+          body: JSON.stringify({ title, content, folder, isPinned }),
         }
       );
 
@@ -234,6 +235,16 @@ const RichTextEditor: React.FC = () => {
               placeholder="Select or type folder"
               className="ml-auto sm:ml-4 mt-2 sm:mt-0 bg-gray-800 text-white rounded px-2 py-1 text-sm w-full sm:w-auto"
             />
+            <button
+              type="button"
+              onClick={() => setIsPinned(!isPinned)}
+              className={`flex items-center gap-1 px-2 py-1 rounded ${isPinned ? "bg-yellow-500 text-white" : "bg-gray-800 text-gray-300"
+                }`}
+            >
+              {isPinned ? "⭐ Star" : "☆ Star note"}
+            </button>
+
+
           </div>
 
           {/* Editor Area */}

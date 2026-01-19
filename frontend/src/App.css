@@ -97,3 +97,22 @@ html {
   unicode-bidi: plaintext !important;
   text-align: left !important;
 }
+
+/* Super thin scrollbar, invisible track, small thumb */
+.scrollbar-thin-invisible::-webkit-scrollbar {
+  width: 4px;       /* super thin */
+}
+
+.scrollbar-thin-invisible::-webkit-scrollbar-track {
+  background: transparent;  /* NO background */
+}
+
+.scrollbar-thin-invisible::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3); /* faint white */
+  border-radius: 9999px;   /* rounded */
+}
+
+.scrollbar-thin-invisible {
+  scrollbar-width: thin; /* for Firefox */
+  scrollbar-color: rgba(255,255,255,0.3) transparent; /* thumb track */
+}
