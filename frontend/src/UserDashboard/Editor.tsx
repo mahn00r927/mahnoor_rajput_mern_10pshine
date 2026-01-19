@@ -21,9 +21,6 @@ const RichTextEditor: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const note: Note | null = location.state?.note || null;
-  // const initialFolder = note?.folder || location.state?.folder || "Default";
-
-
 
   const [title, setTitle] = useState("");
   const [isSaved, setIsSaved] = useState(false);
@@ -33,36 +30,29 @@ const RichTextEditor: React.FC = () => {
   const [linkText, setLinkText] = useState("");
   const savedSelection = useRef<Range | null>(null);
 
-
   const [folder, setFolder] = useState<string>(
     note?.folder || location.state?.folder || "Default"
   );
 
-
-  /* ================= LOAD NOTE (EDIT / NEW) ================= */
+  /* ================= LOAD NOTE ================= */
   useEffect(() => {
-  if (note) {
-    setTitle(note.title);
-    setFolder(note.folder || "Default");
+    if (note) {
+      setTitle(note.title);
+      setFolder(note.folder || "Default");
 
-    if (editorRef.current) {
-      editorRef.current.innerHTML = note.content || "<p><br></p>";
+      if (editorRef.current) {
+        editorRef.current.innerHTML = note.content || "<p><br></p>";
+      }
+    } else {
+      setFolder((prev) => prev || "Default");
+      if (editorRef.current && editorRef.current.innerHTML === "") {
+        editorRef.current.innerHTML = "<p><br></p>";
+      }
     }
-  } else {
-    // 👇 ONLY set default once
-    setFolder((prev) => prev || "Default");
+  }, [note]);
 
-    if (editorRef.current && editorRef.current.innerHTML === "") {
-      editorRef.current.innerHTML = "<p><br></p>";
-    }
-  }
-}, [note]);
-
-  /* ================= TEXT COMMANDS (UNCHANGED) ================= */
-  const executeCommand = (
-    command: string,
-    value: string | undefined = undefined
-  ) => {
+  /* ================= TEXT COMMANDS ================= */
+  const executeCommand = (command: string, value: string | undefined = undefined) => {
     editorRef.current?.focus();
 
     if (command === "insertUnorderedList" || command === "insertOrderedList") {
@@ -83,7 +73,7 @@ const RichTextEditor: React.FC = () => {
     }
   };
 
-  /* ================= SAVE (BACKEND CONNECTED) ================= */
+  /* ================= SAVE ================= */
   const handleSave = async () => {
     const content = editorRef.current?.innerHTML || "";
 
@@ -112,7 +102,6 @@ const RichTextEditor: React.FC = () => {
       setIsSaved(true);
       setTimeout(() => setIsSaved(false), 2000);
 
-      // 👈 back to dashboard after save
       setTimeout(() => {
         navigate("/dashboard");
       }, 500);
@@ -120,25 +109,13 @@ const RichTextEditor: React.FC = () => {
       console.error(err);
       alert("Error saving note");
     }
-    console.log("Saved:", { title, content });
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 2000);
   };
 
-  const handleBack = () => {
-    navigate("/dashboard");
-  };
+  const handleBack = () => navigate("/dashboard");
+  const handleEditorClick = () => editorRef.current?.focus();
 
-  const handleEditorClick = () => {
-    editorRef.current?.focus();
-  };
-
-  /* ================= UI (UNCHANGED) ================= */
-  const ToolbarButton: React.FC<{
-    onClick: () => void;
-    icon: React.ReactNode;
-    title: string;
-  }> = ({ onClick, icon, title }) => (
+  /* ================= UI ================= */
+  const ToolbarButton: React.FC<{ onClick: () => void; icon: React.ReactNode; title: string }> = ({ onClick, icon, title }) => (
     <button
       type="button"
       onClick={onClick}
@@ -149,6 +126,7 @@ const RichTextEditor: React.FC = () => {
       {icon}
     </button>
   );
+
   const handleLinkClick = () => {
     const selection = window.getSelection();
     if (selection && selection.rangeCount > 0) {
@@ -191,10 +169,11 @@ const RichTextEditor: React.FC = () => {
     savedSelection.current = null;
     editorRef.current?.focus();
   };
+
   return (
-    <div className="min-h-screen bg-[#0a0e1a] text-white">
+    <div className="min-h-screen bg-[#0a0e1a] text-white flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+      <div className="flex flex-row sm:flex-row items-center justify-between px-4 sm:px-6 py-4 border-b border-slate-800 gap-3 sm:gap-0">
         <button
           onClick={handleBack}
           className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors duration-200"
@@ -216,82 +195,46 @@ const RichTextEditor: React.FC = () => {
       </div>
 
       {/* Editor Container */}
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        <div className="bg-[#1a2332] rounded-lg shadow-2xl overflow-hidden">
+      <div className="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 w-full">
+        <div className="bg-[#1a2332] rounded-lg shadow-2xl overflow-hidden flex flex-col">
           {/* Title Input */}
           <input
             type="text"
             placeholder="Note title..."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-6 py-5 bg-transparent text-2xl text-slate-300 placeholder-slate-600 border-none outline-none"
+            className="w-full px-4 sm:px-6 py-4 sm:py-5 text-2xl text-slate-300 placeholder-slate-600 border-none outline-none"
           />
 
           {/* Toolbar */}
-          <div className="flex items-center gap-1 px-4 py-3 border-y border-slate-700">
-            <ToolbarButton
-              onClick={() => executeCommand("bold")}
-              icon={<Bold size={20} />}
-              title="Bold (Ctrl+B)"
-            />
-            <ToolbarButton
-              onClick={() => executeCommand("italic")}
-              icon={<Italic size={20} />}
-              title="Italic (Ctrl+I)"
-            />
-            <ToolbarButton
-              onClick={() => executeCommand("underline")}
-              icon={<Underline size={20} />}
-              title="Underline (Ctrl+U)"
-            />
-            <div className="w-px h-6 bg-slate-700 mx-2" />
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 px-2 sm:px-4 py-3 border-y border-slate-700">
+            <ToolbarButton onClick={() => executeCommand("bold")} icon={<Bold size={20} />} title="Bold (Ctrl+B)" />
+            <ToolbarButton onClick={() => executeCommand("italic")} icon={<Italic size={20} />} title="Italic (Ctrl+I)" />
+            <ToolbarButton onClick={() => executeCommand("underline")} icon={<Underline size={20} />} title="Underline (Ctrl+U)" />
 
-            <ToolbarButton
-              onClick={handleLinkClick}
-              icon={<Link size={20} />}
-              title="Insert Link (Ctrl+K)"
-            />
+            <div className="w-px h-6 bg-slate-700 mx-2 hidden sm:block" />
 
-            <div className="w-px h-6 bg-slate-700 mx-2" />
+            <ToolbarButton onClick={handleLinkClick} icon={<Link size={20} />} title="Insert Link (Ctrl+K)" />
 
-            <ToolbarButton
-              onClick={() => executeCommand("insertUnorderedList")}
-              icon={<List size={20} />}
-              title="Bullet List"
-            />
-            <ToolbarButton
-              onClick={() => executeCommand("insertOrderedList")}
-              icon={<ListOrdered size={20} />}
-              title="Numbered List"
-            />
+            <div className="w-px h-6 bg-slate-700 mx-2 hidden sm:block" />
 
-            <div className="w-px h-6 bg-slate-700 mx-2" />
+            <ToolbarButton onClick={() => executeCommand("insertUnorderedList")} icon={<List size={20} />} title="Bullet List" />
+            <ToolbarButton onClick={() => executeCommand("insertOrderedList")} icon={<ListOrdered size={20} />} title="Numbered List" />
 
-            <ToolbarButton
-              onClick={() => executeCommand("justifyLeft")}
-              icon={<AlignLeft size={20} />}
-              title="Align Left"
-            />
-            <ToolbarButton
-              onClick={() => executeCommand("justifyCenter")}
-              icon={<AlignCenter size={20} />}
-              title="Align Center"
-            />
-            <ToolbarButton
-              onClick={() => executeCommand("justifyRight")}
-              icon={<AlignRight size={20} />}
-              title="Align Right"
-            />
+            <div className="w-px h-6 bg-slate-700 mx-2 hidden sm:block" />
+
+            <ToolbarButton onClick={() => executeCommand("justifyLeft")} icon={<AlignLeft size={20} />} title="Align Left" />
+            <ToolbarButton onClick={() => executeCommand("justifyCenter")} icon={<AlignCenter size={20} />} title="Align Center" />
+            <ToolbarButton onClick={() => executeCommand("justifyRight")} icon={<AlignRight size={20} />} title="Align Right" />
+
             <input
               list="folders"
               value={folder}
               onChange={(e) => setFolder(e.target.value)}
               placeholder="Select or type folder"
-              className="ml-4 bg-gray-800 text-white rounded px-2 py-1 text-sm"
+              className="ml-auto sm:ml-4 mt-2 sm:mt-0 bg-gray-800 text-white rounded px-2 py-1 text-sm w-full sm:w-auto"
             />
-
           </div>
-
 
           {/* Editor Area */}
           <div
@@ -299,33 +242,27 @@ const RichTextEditor: React.FC = () => {
             contentEditable
             onClick={handleEditorClick}
             suppressContentEditableWarning
-            className="min-h-100 px-6 py-6 text-slate-300 outline-none editor-content"
-            style={{
-              lineHeight: "1.6",
-            }}
+            className="min-h-[300px] sm:min-h-[400px] px-4 sm:px-6 py-6 sm:py-8 text-slate-300 outline-none editor-content flex-1"
+            style={{ lineHeight: "1.6" }}
           />
         </div>
 
         {/* Helper Text */}
-        <div className="mt-4 text-center text-slate-500 text-sm">
+        <div className="mt-4 text-center text-slate-500 text-sm px-2 sm:px-0">
           <p>
             Use keyboard shortcuts: Ctrl+B (Bold), Ctrl+I (Italic), Ctrl+U (Underline), Ctrl+K (Link)
           </p>
         </div>
       </div>
+
       {/* Link Modal */}
       {showLinkModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
           <div className="bg-[#1a2332] rounded-lg p-6 w-full max-w-md border border-slate-700">
-            <h3 className="text-xl font-semibold mb-4 text-slate-200">
-              Insert Link
-            </h3>
-
+            <h3 className="text-xl font-semibold mb-4 text-slate-200">Insert Link</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-slate-400 mb-2">
-                  Link Text
-                </label>
+                <label className="block text-sm text-slate-400 mb-2">Link Text</label>
                 <input
                   type="text"
                   value={linkText}
@@ -334,27 +271,19 @@ const RichTextEditor: React.FC = () => {
                   className="w-full px-4 py-2 bg-[#0a0e1a] border border-slate-700 rounded text-slate-300 placeholder-slate-600 outline-none focus:border-blue-500"
                 />
               </div>
-
               <div>
-                <label className="block text-sm text-slate-400 mb-2">
-                  URL
-                </label>
+                <label className="block text-sm text-slate-400 mb-2">URL</label>
                 <input
                   type="text"
                   value={linkUrl}
                   onChange={(e) => setLinkUrl(e.target.value)}
                   placeholder="https://example.com"
                   className="w-full px-4 py-2 bg-[#0a0e1a] border border-slate-700 rounded text-slate-300 placeholder-slate-600 outline-none focus:border-blue-500"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      insertLink();
-                    }
-                  }}
+                  onKeyDown={(e) => e.key === "Enter" && insertLink()}
                 />
               </div>
             </div>
-
-            <div className="flex gap-3 mt-6">
+            <div className="flex flex-col sm:flex-row gap-3 mt-6">
               <button
                 onClick={insertLink}
                 className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-medium transition-colors duration-200"
@@ -381,78 +310,28 @@ const RichTextEditor: React.FC = () => {
         .editor-content {
           caret-color: #60a5fa;
         }
-        
         .editor-content:focus {
           outline: none;
         }
-        
         .editor-content p {
           margin: 0.75em 0;
           min-height: 1.5em;
         }
-        
         .editor-content ul,
         .editor-content ol {
           margin: 0.75em 0;
           padding-left: 2.5em;
-          display: block;
         }
-        
-        .editor-content ul {
-          list-style-type: disc;
-        }
-        
-        .editor-content ol {
-          list-style-type: decimal;
-        }
-        
-        .editor-content li {
-          margin: 0.5em 0;
-          display: list-item;
-          padding-left: 0.5em;
-        }
-        
-        .editor-content ul li::marker {
-          color: #60a5fa;
-        }
-        
-        .editor-content ol li::marker {
-          color: #60a5fa;
-        }
-        
-        .editor-content strong {
-          font-weight: 700;
-          color: #e2e8f0;
-        }
-        
-        .editor-content em {
-          font-style: italic;
-        }
-        
-        .editor-content u {
-          text-decoration: underline;
-        }
-
-        .editor-content:empty:before {
-          content: '';
-          color: #64748b;
-        }
-
-        /* Ensure lists are visible */
-        .editor-content ul,
-        .editor-content ol {
-          visibility: visible !important;
-          opacity: 1 !important;
-        }
-          .editor-content a {
-  color: #60a5fa;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.editor-content a:hover {
-  color: #93c5fd;
-}
+        .editor-content ul { list-style-type: disc; }
+        .editor-content ol { list-style-type: decimal; }
+        .editor-content li { margin: 0.5em 0; display: list-item; padding-left: 0.5em; }
+        .editor-content ul li::marker { color: #60a5fa; }
+        .editor-content ol li::marker { color: #60a5fa; }
+        .editor-content strong { font-weight: 700; color: #e2e8f0; }
+        .editor-content em { font-style: italic; }
+        .editor-content u { text-decoration: underline; }
+        .editor-content a { color: #60a5fa; text-decoration: underline; cursor: pointer; }
+        .editor-content a:hover { color: #93c5fd; }
       `}</style>
     </div>
   );

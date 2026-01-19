@@ -36,7 +36,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ name, email, onLogout }) => {
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 mt-3 w-56 sm:w-64 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 overflow-hidden">
+        <div className="absolute ml-20 mt-3 w-56 sm:w-64 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 overflow-hidden">
           <div className="px-4 py-3 border-b border-slate-700">
             <p className="text-sm text-slate-400">Account</p>
             <p className="text-sm font-medium truncate text-white">{email}</p>

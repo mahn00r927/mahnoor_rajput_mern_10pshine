@@ -11,25 +11,16 @@ interface Props {
 
 const NOTES_PER_PAGE = 9;
 
-export default function NotesList({
-  notes,
-  onEdit,
-  onDelete,
-  onNew,
-}: Props) {
+export default function NotesList({ notes, onEdit, onDelete, onNew }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(notes.length / NOTES_PER_PAGE);
-
   const startIndex = (currentPage - 1) * NOTES_PER_PAGE;
-  const currentNotes = notes.slice(
-    startIndex,
-    startIndex + NOTES_PER_PAGE
-  );
+  const currentNotes = notes.slice(startIndex, startIndex + NOTES_PER_PAGE);
 
   if (!notes || notes.length === 0) {
     return (
-      <div className="text-center py-20">
+      <div className="text-center py-20 px-4 sm:px-0">
         <FileText className="w-12 h-12 mx-auto text-gray-600 mb-4 mt-10" />
         <p className="text-gray-400 mb-4">No notes yet</p>
         <button
@@ -45,26 +36,26 @@ export default function NotesList({
   return (
     <>
       {/* NOTES GRID */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 mt-16 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {currentNotes.map((note) => (
           <div
             key={note._id}
             onClick={() => onEdit(note)}
-            className="bg-gray-900 border border-gray-800 p-4 rounded cursor-pointer hover:border-gray-700 transition"
+            className="bg-gray-900 border border-gray-800 p-4 rounded cursor-pointer hover:border-gray-700 transition flex flex-col"
           >
-            <h3 className="font-semibold mb-2 truncate">
+            <h3 className="font-semibold mb-2 truncate text-lg sm:text-base">
               {note.title || "Untitled"}
             </h3>
 
             <div
-              className="text-sm text-gray-400 line-clamp-3 pointer-events-none"
+              className="text-sm text-gray-400 line-clamp-3 flex-1 overflow-hidden"
               dangerouslySetInnerHTML={{
                 __html: note.content || "<p class='italic'>Empty note</p>",
               }}
             />
 
             {/* ACTION BUTTONS */}
-            <div className="flex justify-end gap-4 mt-3">
+            <div className="flex justify-end gap-3 mt-3 flex-wrap">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -93,7 +84,7 @@ export default function NotesList({
 
       {/* PAGINATION */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-4 mt-8">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
           <button
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((p) => p - 1)}
