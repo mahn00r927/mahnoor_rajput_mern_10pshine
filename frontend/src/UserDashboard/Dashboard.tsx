@@ -138,7 +138,7 @@ export default function Dashboard() {
             onClick={() => setSidebarOpen(false)}
           />
 
-          <div className="absolute left-0 top-0 h-full w-65 bg-slate-900">
+          <div className="absolute left-0 top-0 h-full w-[260px] bg-slate-900">
             <Sidebar
               onNewNote={handleNewNote}
               folders={folders}

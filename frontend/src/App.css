@@ -2,6 +2,14 @@
 /* SmartNotes - Global Background Styling */
 
 /* Main App Container - Single Unified Background */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #020617; /* same as bg-gray-950 */
+  overflow: hidden;
+}
+
 .app-container {
   min-height: 100vh;
   background: linear-gradient(to bottom right, #0f172a, #000000, #172554);
@@ -115,4 +123,16 @@ html {
 .scrollbar-thin-invisible {
   scrollbar-width: thin; /* for Firefox */
   scrollbar-color: rgba(255,255,255,0.3) transparent; /* thumb track */
+}
+
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none;
 }
