@@ -88,18 +88,14 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-950 text-white overflow-hidden">
-
-      {/* Desktop Sidebar */}
-      <div className="hidden md:block">
-        <Sidebar
-          onNewNote={handleNewNote}
-          folders={folders}
-          selectedFolder={selectedFolder}
-          onSelectFolder={setSelectedFolder}
-          onDeleteFolder={handleDeleteFolder}
-        />
-      </div>
+    <div className="flex h-190 bg-gray-950 text-white">
+      <Sidebar
+        onNewNote={handleNewNote}
+        folders={uniqueFolders}
+        selectedFolder={selectedFolder}
+        onSelectFolder={setSelectedFolder}
+        onDeleteFolder={handleDeleteFolder}
+      />
 
       {/* Mobile Sidebar */}
       {sidebarOpen && (

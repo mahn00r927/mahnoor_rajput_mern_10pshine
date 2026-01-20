@@ -43,6 +43,7 @@ export default function TopBar({
         name={user.name}
         email={user.email}
         onLogout={() => {
+          localStorage.removeItem("token");
           localStorage.clear();
           navigate("/login", { replace: true });
         }}
