@@ -70,6 +70,9 @@ export default function Sidebar({
         className={`w-full bg-slate-800/50 hover:bg-slate-800 text-blue-400 font-medium py-3 rounded-lg transition-all duration-200 flex items-center gap-3 px-4 mb-10 border border-slate-700/50 hover:border-blue-500/50 ${selectedFolder === null ? "bg-blue-600 text-white" : ""
           }`}
         onClick={() => onSelectFolder(null)}
+        className={`flex items-center gap-2 px-3 py-2 rounded mb-3 ${selectedFolder === null ? "bg-blue-600" : "bg-slate-800"
+          }`}
+        onClick={() => onSelectFolder(null)}
         className={`flex items-center gap-2 px-3 py-2 rounded mb-2 ${
           selectedFolder === null
             ? "bg-blue-600"

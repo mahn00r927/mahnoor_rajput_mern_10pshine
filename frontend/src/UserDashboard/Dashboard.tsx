@@ -129,6 +129,14 @@ export default function Dashboard() {
           onCreateFolder={handleCreateFolder}
         />
       </div>
+    <div className="flex h-190 bg-gray-950 text-white">
+      <Sidebar
+        onNewNote={handleNewNote}
+        folders={uniqueFolders}
+        selectedFolder={selectedFolder}
+        onSelectFolder={setSelectedFolder}
+        onDeleteFolder={handleDeleteFolder}
+      />
 
       {/* Mobile Sidebar */}
       {sidebarOpen && (
