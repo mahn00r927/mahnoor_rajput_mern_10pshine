@@ -64,7 +64,7 @@ export default function NotesList({
 
   if (!notes || notes.length === 0) {
     return (
-      <div className="text-center py-20 px-4 sm:px-0">
+      <div className="text-center py-20" >
         <FileText className="w-12 h-12 mx-auto text-gray-600 mb-4 mt-10" />
         <p className="text-gray-400 mb-4">No notes yet</p>
         <button
@@ -80,7 +80,7 @@ export default function NotesList({
   return (
     <>
       {/* NOTES GRID */}
-      <div className="grid grid-cols-1 mt-8 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-16">
         {currentNotes.map((note) => (
           <div
             key={note._id}
