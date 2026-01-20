@@ -1,13 +1,14 @@
 export const Footer: React.FC = () => {
   return (
-    <footer className=" border-t border-gray-800">
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* Logo and Brand */}
+    <footer className="border-t border-gray-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div className="flex flex-col md:flex-row items-center md:justify-between gap-4 text-center md:text-left">
+
+          {/* Logo & Brand */}
           <div className="flex items-center gap-3">
-            <div className="bg-linear-to-br from-blue-500 to-blue-600 p-2.5 rounded-xl shadow-lg shadow-blue-500/30">
+            <div className="bg-linear-to-br from-blue-500 to-blue-600 p-2 sm:p-2.5 rounded-xl shadow-lg shadow-blue-500/30">
               <svg
-                className="w-5 h-5 text-white"
+                className="w-4 h-4 sm:w-5 sm:h-5 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -20,18 +21,22 @@ export const Footer: React.FC = () => {
                 />
               </svg>
             </div>
+
             <div>
-              <span className="text-xl font-bold text-white block">
+              <span className="text-lg sm:text-xl font-bold text-white block">
                 Smart Notes
               </span>
-              <p className="text-white mt-1">Smarter notes, better ideas</p>
+              <p className="text-gray-400 text-xs sm:text-sm mt-0.5">
+                Smarter notes, better ideas
+              </p>
             </div>
           </div>
 
           {/* Copyright */}
-          <div className="text-gray-400 text-sm">
+          <div className="text-gray-500 text-xs sm:text-sm">
             © 2025 SmartNotes. All rights reserved.
           </div>
+
         </div>
       </div>
     </footer>

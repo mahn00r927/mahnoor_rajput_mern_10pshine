@@ -1,37 +1,42 @@
-import { Plus, FolderOpen } from "lucide-react";
+import { Plus, Trash2, FolderOpen, X } from "lucide-react";
 
 interface SidebarProps {
   onNewNote: () => void;
   folders: string[];
   selectedFolder: string | null;
   onSelectFolder: (folder: string | null) => void;
-  onDeleteFolder: (folder: string) => void; // NEW
+  onDeleteFolder: (folder: string) => void;
+  onClose?: () => void; // ✅ NEW
 }
 
-
-const Sidebar: React.FC<SidebarProps> = ({
+export default function Sidebar({
   onNewNote,
   folders,
   selectedFolder,
   onSelectFolder,
-  onDeleteFolder, // NEW
-}) => {
+  onDeleteFolder,
+  onClose,
+}: SidebarProps) {
+  return (
+    <aside className="w-68 h-full bg-slate-900 border-r border-slate-800 p-4 flex flex-col relative">
 
-  const handleAddFolder = (): void => {
-    const folderName = prompt("Enter folder name");
-    if (!folderName) return;
-    // Trigger a folder selection immediately
-    onSelectFolder(folderName);
-    // Optional: you may later save this folder to backend
-  };
+      {/* ❌ Close button (mobile only) */}
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 md:hidden text-slate-400 hover:text-white"
+        >
+          <X size={22} />
+        </button>
+      )}
 
   return (
     <aside className="w-80 h-190 bg-slate-900 border-r border-slate-800 flex flex-col p-4">
       {/* Logo */}
-      <div className="flex items-center gap-3">
-        <div className="bg-linear-to-br from-blue-500 to-blue-600 p-3 rounded-2xl shadow-lg shadow-blue-500/30">
+      <div className="flex items-center gap-2 sm:gap-3 mb-5">
+        <div className="bg-linear-to-br from-blue-500 to-blue-600 p-2.5 sm:p-3 rounded-2xl shadow-lg shadow-blue-500/30">
           <svg
-            className="w-6 h-6 text-white"
+            className="w-5 h-5 sm:w-6 sm:h-6 text-white"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -44,18 +49,20 @@ const Sidebar: React.FC<SidebarProps> = ({
             />
           </svg>
         </div>
-        <span className="text-2xl font-bold text-white tracking-tight">
+
+        {/* Smart Notes text */}
+        <span className="text-lg sm:text-xl font-semibold tracking-tight text-white">
           Smart Notes
         </span>
       </div>
 
+
       {/* New Note */}
       <button
         onClick={onNewNote}
-        className="w-full bg-blue-600 hover:bg-blue-700 mt-7 text-white font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 flex items-center justify-center gap-2 mb-10 hover:scale-[1.02] active:scale-[0.98]"
+        className="bg-blue-600 hover:bg-blue-700 py-2 rounded-xl mb-6 flex items-center justify-center gap-2"
       >
-        <Plus size={20} />
-        New Note
+        <Plus size={18} /> New Note
       </button>
 
       {/* All Notes */}
@@ -63,62 +70,39 @@ const Sidebar: React.FC<SidebarProps> = ({
         className={`w-full bg-slate-800/50 hover:bg-slate-800 text-blue-400 font-medium py-3 rounded-lg transition-all duration-200 flex items-center gap-3 px-4 mb-10 border border-slate-700/50 hover:border-blue-500/50 ${selectedFolder === null ? "bg-blue-600 text-white" : ""
           }`}
         onClick={() => onSelectFolder(null)}
+        className={`flex items-center gap-2 px-3 py-2 rounded mb-3 ${selectedFolder === null ? "bg-blue-600" : "bg-slate-800"
+          }`}
       >
-        <FolderOpen size={20} />
-        All Notes
+        <FolderOpen size={16} /> All Notes
       </button>
 
       {/* Folders */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
-            Folders
-          </h2>
-          <button
-            onClick={handleAddFolder}
-            className="w-6 h-6 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-blue-400 flex items-center justify-center transition-all"
+      <div className="space-y-2">
+        {folders.map((folder) => (
+          <div
+            key={folder}
+            className={`flex justify-between items-center px-3 py-2 rounded cursor-pointer ${selectedFolder === folder
+                ? "bg-blue-600"
+                : "hover:bg-slate-800"
+              }`}
+            onClick={() => onSelectFolder(folder)}
           >
-            <Plus size={16} />
-          </button>
-        </div>
-
-        {folders.length === 0 ? (
-          <p className="text-slate-500 text-sm italic pl-2">No folders yet</p>
-        ) : (
-          <div className="space-y-2">
-            {folders.map((folder, index) => (
-              <div
-                key={index}
-                className={`flex justify-between items-center py-2 px-3 rounded-lg cursor-pointer transition-all ${selectedFolder === folder
-                    ? "bg-blue-600 text-white"
-                    : "text-slate-300 hover:text-white hover:bg-slate-800"
-                  }`}
-              >
-                <span onClick={() => onSelectFolder(folder)}>{folder}</span>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation(); // prevent selecting folder
-                    onDeleteFolder(folder); // call Dashboard handler
-                  }}
-                  className="text-red-400 hover:text-red-600 text-sm px-2"
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
-
-
+            <span>{folder}</span>
+            <Trash2
+              size={14}
+              className="text-red-400"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDeleteFolder(folder);
+              }}
+            />
           </div>
-        )}
+        ))}
       </div>
 
-      {/* Spacer */}
-      <div className="grow" />
-
-      {/* Footer */}
-      <div className="text-xs text-slate-500 text-center">© Smart Notes</div>
+      <div className="mt-auto text-xs text-center text-slate-500">
+        © Smart Notes
+      </div>
     </aside>
   );
-};
-
-export default Sidebar;
+}
