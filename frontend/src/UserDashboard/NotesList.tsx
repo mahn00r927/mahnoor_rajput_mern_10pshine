@@ -11,12 +11,13 @@ import type { Note } from "./types";
 import type { Dispatch, SetStateAction } from "react";
 
 interface Props {
-  notes: Note[];
-  onEdit: (note: Note) => void;
-  onDelete: (id: string) => void;
-  onNew: () => void;
-  setNotes: Dispatch<SetStateAction<Note[]>>;
+  readonly notes: Note[];
+  readonly onEdit: (note: Note) => void;
+  readonly onDelete: (id: string) => void;
+  readonly onNew: () => void;
+  readonly setNotes: Dispatch<SetStateAction<Note[]>>;
 }
+
 
 const NOTES_PER_PAGE = 9;
 
@@ -80,9 +81,9 @@ export default function NotesList({
   return (
     <>
       {/* NOTES GRID */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-16">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
         {currentNotes.map((note) => (
-          <div
+          <button
             key={note._id}
             onClick={() => onEdit(note)}
             className="bg-gray-900 border border-gray-800 p-4 rounded cursor-pointer hover:border-gray-700 transition flex flex-col"
@@ -143,7 +144,7 @@ export default function NotesList({
                 Delete
               </button>
             </div>
-          </div>
+          </button>
         ))}
       </div>
 

@@ -6,9 +6,11 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background-color: #020617; /* same as bg-gray-950 */
-  overflow: hidden;
+  background-color: #020617;
+  overflow-y: auto;   /* ✅ */
+  overflow-x: hidden;
 }
+
 
 .app-container {
   min-height: 100vh;
@@ -96,6 +98,7 @@ html {
 
 * {
   box-sizing: border-box;
+   scrollbar-width: none;
 }
 
 
@@ -129,10 +132,4 @@ html {
 /* Chrome, Edge, Safari */
 ::-webkit-scrollbar {
   width: 0px;
-  height: 0px;
-}
-
-/* Firefox */
-* {
-  scrollbar-width: none;
 }

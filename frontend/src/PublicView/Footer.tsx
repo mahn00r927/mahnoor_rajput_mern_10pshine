@@ -34,7 +34,7 @@ export const Footer: React.FC = () => {
 
           {/* Copyright */}
           <div className="text-gray-500 text-xs sm:text-sm">
-            © 2025 SmartNotes. All rights reserved.
+            © 2026 SmartNotes. All rights reserved.
           </div>
 
         </div>

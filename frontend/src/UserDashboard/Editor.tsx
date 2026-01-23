@@ -10,12 +10,31 @@ import {
   AlignLeft,
   AlignCenter,
   AlignRight,
-  Link
+  Link,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { Note } from "./types";
 
 const BASE_URL = "http://localhost:5000/api";
+
+/* ================= TOOLBAR BUTTON ================= */
+interface ToolbarButtonProps {
+  onClick: () => void;
+  icon: React.ReactNode;
+  title: string;
+}
+
+const ToolbarButton: React.FC<ToolbarButtonProps> = ({ onClick, icon, title }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    title={title}
+    onMouseDown={(e) => e.preventDefault()}
+    className="p-2 hover:bg-slate-700 rounded transition-colors duration-200 text-slate-300 hover:text-white"
+  >
+    {icon}
+  </button>
+);
 
 const RichTextEditor: React.FC = () => {
   const navigate = useNavigate();
@@ -53,13 +72,15 @@ const RichTextEditor: React.FC = () => {
   }, [note]);
 
   /* ================= TEXT COMMANDS ================= */
-  const executeCommand = (command: string, value: string | undefined = undefined) => {
+  const executeCommand = (command: string, value?: string) => {
     editorRef.current?.focus();
 
+    const selection = globalThis.getSelection(); // globalThis instead of window
+
     if (command === "insertUnorderedList" || command === "insertOrderedList") {
-      const selection = window.getSelection();
       if (selection && selection.rangeCount > 0) {
-        document.execCommand(command, false, value);
+        // eslint-disable-next-line deprecation/deprecation
+        document.execCommand(command, false, value); // deprecated
         setTimeout(() => {
           if (editorRef.current) {
             const range = selection.getRangeAt(0);
@@ -70,7 +91,8 @@ const RichTextEditor: React.FC = () => {
         }, 0);
       }
     } else {
-      document.execCommand(command, false, value);
+      // eslint-disable-next-line deprecation/deprecation
+      document.execCommand(command, false, value); // deprecated
     }
   };
 
@@ -115,21 +137,9 @@ const RichTextEditor: React.FC = () => {
   const handleBack = () => navigate("/dashboard");
   const handleEditorClick = () => editorRef.current?.focus();
 
-  /* ================= UI ================= */
-  const ToolbarButton: React.FC<{ onClick: () => void; icon: React.ReactNode; title: string }> = ({ onClick, icon, title }) => (
-    <button
-      type="button"
-      onClick={onClick}
-      title={title}
-      onMouseDown={(e) => e.preventDefault()}
-      className="p-2 hover:bg-slate-700 rounded transition-colors duration-200 text-slate-300 hover:text-white"
-    >
-      {icon}
-    </button>
-  );
-
+  /* ================= LINK MODAL ================= */
   const handleLinkClick = () => {
-    const selection = window.getSelection();
+    const selection = globalThis.getSelection();
     if (selection && selection.rangeCount > 0) {
       savedSelection.current = selection.getRangeAt(0).cloneRange();
       const selectedText = selection.toString();
@@ -143,16 +153,17 @@ const RichTextEditor: React.FC = () => {
     if (!linkUrl) return;
 
     if (savedSelection.current) {
-      const selection = window.getSelection();
+      const selection = globalThis.getSelection();
       if (selection) {
         selection.removeAllRanges();
         selection.addRange(savedSelection.current);
       }
     }
 
-    if (linkText && !window.getSelection()?.toString()) {
+    if (linkText && !globalThis.getSelection()?.toString()) {
+      // eslint-disable-next-line deprecation/deprecation
       document.execCommand("insertText", false, linkText);
-      const selection = window.getSelection();
+      const selection = globalThis.getSelection();
       if (selection && selection.rangeCount > 0) {
         const range = selection.getRangeAt(0);
         range.setStart(range.endContainer, range.endOffset - linkText.length);
@@ -161,7 +172,8 @@ const RichTextEditor: React.FC = () => {
       }
     }
 
-    const url = linkUrl.match(/^https?:\/\//) ? linkUrl : `https://${linkUrl}`;
+    const url = /^https?:\/\//.exec(linkUrl) ? linkUrl : `https://${linkUrl}`;
+    // eslint-disable-next-line deprecation/deprecation
     document.execCommand("createLink", false, url);
 
     setShowLinkModal(false);
@@ -185,10 +197,9 @@ const RichTextEditor: React.FC = () => {
 
         <button
           onClick={handleSave}
-          className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer ${isSaved
-            ? "bg-green-600 hover:bg-green-700"
-            : "bg-blue-600 hover:bg-blue-700"
-            }`}
+          className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
+            isSaved ? "bg-green-600 hover:bg-green-700" : "bg-blue-600 hover:bg-blue-700"
+          }`}
         >
           <Save size={18} />
           <span>{isSaved ? "Saved!" : "Save"}</span>
@@ -238,19 +249,20 @@ const RichTextEditor: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsPinned(!isPinned)}
-              className={`flex items-center gap-1 px-2 py-1 rounded cursor-pointer ${isPinned ? "bg-yellow-500 text-white" : "bg-gray-800 text-gray-300"
-                }`}
+              className={`flex items-center gap-1 px-2 py-1 rounded cursor-pointer ${
+                isPinned ? "bg-yellow-500 text-white" : "bg-gray-800 text-gray-300"
+              }`}
             >
               {isPinned ? "⭐ Star" : "☆ Star"}
             </button>
-
-
           </div>
 
           {/* Editor Area */}
           <div
             ref={editorRef}
             contentEditable
+            role="textbox"
+            tabIndex={0}
             onClick={handleEditorClick}
             suppressContentEditableWarning
             className="min-h-[300px] sm:min-h-[400px] px-4 sm:px-6 py-6 sm:py-8 text-slate-300 outline-none editor-content flex-1"
@@ -273,8 +285,9 @@ const RichTextEditor: React.FC = () => {
             <h3 className="text-xl font-semibold mb-4 text-slate-200">Insert Link</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-slate-400 mb-2">Link Text</label>
+                <label htmlFor="linkText" className="block text-sm text-slate-400 mb-2">Link Text</label>
                 <input
+                  id="linkText"
                   type="text"
                   value={linkText}
                   onChange={(e) => setLinkText(e.target.value)}
@@ -283,8 +296,9 @@ const RichTextEditor: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm text-slate-400 mb-2">URL</label>
+                <label htmlFor="linkUrl" className="block text-sm text-slate-400 mb-2">URL</label>
                 <input
+                  id="linkUrl"
                   type="text"
                   value={linkUrl}
                   onChange={(e) => setLinkUrl(e.target.value)}
@@ -317,27 +331,16 @@ const RichTextEditor: React.FC = () => {
         </div>
       )}
 
+      {/* Editor styles */}
       <style>{`
-        .editor-content {
-          caret-color: #60a5fa;
-        }
-        .editor-content:focus {
-          outline: none;
-        }
-        .editor-content p {
-          margin: 0.75em 0;
-          min-height: 1.5em;
-        }
-        .editor-content ul,
-        .editor-content ol {
-          margin: 0.75em 0;
-          padding-left: 2.5em;
-        }
+        .editor-content { caret-color: #60a5fa; }
+        .editor-content:focus { outline: none; }
+        .editor-content p { margin: 0.75em 0; min-height: 1.5em; }
+        .editor-content ul, .editor-content ol { margin: 0.75em 0; padding-left: 2.5em; }
         .editor-content ul { list-style-type: disc; }
         .editor-content ol { list-style-type: decimal; }
         .editor-content li { margin: 0.5em 0; display: list-item; padding-left: 0.5em; }
-        .editor-content ul li::marker { color: #60a5fa; }
-        .editor-content ol li::marker { color: #60a5fa; }
+        .editor-content ul li::marker, .editor-content ol li::marker { color: #60a5fa; }
         .editor-content strong { font-weight: 700; color: #e2e8f0; }
         .editor-content em { font-style: italic; }
         .editor-content u { text-decoration: underline; }

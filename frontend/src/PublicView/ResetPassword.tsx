@@ -18,7 +18,7 @@ export function ResetPassword() {
     return password.length >= 8 &&
       /[A-Z]/.test(password) &&
       /[a-z]/.test(password) &&
-      /[0-9]/.test(password) &&
+      /\d/.test(password) &&
       /[!@#$%^&*(),.?":{}|<>]/.test(password);
   };
 
@@ -58,7 +58,7 @@ export function ResetPassword() {
     if (password.length >= 8) score++;
     if (/[A-Z]/.test(password)) score++;
     if (/[a-z]/.test(password)) score++;
-    if (/[0-9]/.test(password)) score++;
+    if (/\d/.test(password)) score++;
     if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score++;
     if (score <= 2) return { strength: "Weak", color: "bg-red-500", width: "33%" };
     if (score <= 4) return { strength: "Medium", color: "bg-yellow-500", width: "66%" };
@@ -95,6 +95,12 @@ export function ResetPassword() {
     );
   }
 
+  let passwordColor = "text-green-400"; // default
+  if (passwordStrength.strength === "Weak") {
+    passwordColor = "text-red-400";
+  } else if (passwordStrength.strength === "Medium") {
+    passwordColor = "text-yellow-400";
+  }
   // ✅ Reset form
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16">
@@ -113,7 +119,7 @@ export function ResetPassword() {
 
         {/* New Password */}
         <div className="mb-6">
-          <label className="block text-slate-300 font-medium mb-2">New Password</label>
+          <label htmlFor="newPassword" className="block text-slate-300 font-medium mb-2">New Password</label>
           <div className="relative">
             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
             <input
@@ -138,7 +144,7 @@ export function ResetPassword() {
             <div className="mt-3">
               <div className="flex justify-between items-center mb-2 text-sm sm:text-base">
                 <span className="text-slate-400">Password strength:</span>
-                <span className={`font-medium ${passwordStrength.strength === "Weak" ? "text-red-400" : passwordStrength.strength === "Medium" ? "text-yellow-400" : "text-green-400"}`}>
+                <span className={`font-medium ${passwordColor}`}>
                   {passwordStrength.strength}
                 </span>
               </div>
@@ -154,7 +160,7 @@ export function ResetPassword() {
 
         {/* Confirm Password */}
         <div className="mb-6">
-          <label className="block text-slate-300 font-medium mb-2">Confirm Password</label>
+          <label htmlFor="confirmPassword" className="block text-slate-300 font-medium mb-2">Confirm Password</label>
           <div className="relative">
             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
             <input
@@ -183,7 +189,7 @@ export function ResetPassword() {
               { test: newPassword.length >= 8, label: "At least 8 characters" },
               { test: /[A-Z]/.test(newPassword), label: "One uppercase letter" },
               { test: /[a-z]/.test(newPassword), label: "One lowercase letter" },
-              { test: /[0-9]/.test(newPassword), label: "One number" },
+              { test: /\d/.test(newPassword), label: "One number" },
               { test: /[!@#$%^&*(),.?":{}|<>]/.test(newPassword), label: "One special character" },
             ].map((req, idx) => (
               <li key={idx} className={`flex items-center ${req.test ? "text-green-400" : "text-slate-400"}`}>

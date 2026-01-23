@@ -3,9 +3,9 @@ import UserAvatar from "./Avatar";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
-  searchQuery: string;
-  setSearchQuery: (v: string) => void;
-  onSidebarToggle: () => void;
+  readonly searchQuery: string;
+  readonly setSearchQuery: (v: string) => void;
+  readonly onSidebarToggle: () => void;
 }
 
 export default function TopBar({
@@ -41,7 +41,6 @@ export default function TopBar({
       {/* Avatar */}
       <UserAvatar
         name={user.name}
-        email={user.email}
         onLogout={() => {
           localStorage.removeItem("token");
           localStorage.clear();

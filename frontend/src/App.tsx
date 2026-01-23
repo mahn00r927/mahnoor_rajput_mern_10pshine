@@ -12,6 +12,7 @@ import { ResetPassword } from "./PublicView/ResetPassword";
 import Dashboard from "./UserDashboard/Dashboard";
 import Editor from "./UserDashboard/Editor";
 import ProtectedRoute from "./ProtectedRoute";
+import AccountPage from "./UserDashboard/Account";
 function App() {
   return (
     <Router>
@@ -66,6 +67,9 @@ function App() {
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/editor" element={ <div className="app-container">
           <ProtectedRoute><Editor /></ProtectedRoute>
+        </div>} />
+        <Route path="/account" element={ <div className="app-container">
+          <ProtectedRoute><AccountPage /></ProtectedRoute>
         </div>} />
         
       </Routes>

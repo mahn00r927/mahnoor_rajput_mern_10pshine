@@ -48,7 +48,7 @@ export function Signup() {
     }
   };
 
-  const handleGoBack = () => window.history.back();
+  const handleGoBack = () => globalThis.history.back();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") handleSignup();
@@ -95,7 +95,7 @@ export function Signup() {
 
             {/* Name */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Name</label>
+              <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-1">Name</label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                 <input
@@ -111,7 +111,7 @@ export function Signup() {
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
+              <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1">Email</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                 <input
@@ -127,7 +127,7 @@ export function Signup() {
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
+              <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-1">Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                 <input

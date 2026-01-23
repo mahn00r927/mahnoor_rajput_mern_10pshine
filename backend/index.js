@@ -30,6 +30,7 @@ app.use("/api/notes", noteRoutes);
 app.use("/api/forgot-password", forgotPasswordRoutes);
 // Protected route
 app.use("/protected", protectedRoutes);
+app.use("/api/users", require("./Routes/UserRoutes"));
 
 app.get("/", (req, res) => {
   res.send("Server is running");
