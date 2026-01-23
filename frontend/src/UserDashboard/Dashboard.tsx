@@ -4,7 +4,7 @@ import Sidebar from "./Sidebar";
 import TopBar from "./Navbar";
 import NotesList from "./NotesList";
 import type { Note } from "./types";
-
+import WelcomeSection from "./Welcome";
 const BASE_URL = "http://localhost:5000/api";
 
 export default function Dashboard() {
@@ -36,11 +36,15 @@ export default function Dashboard() {
     fetchNotes();
   }, []);
 
-
   const handleNewNote = () => {
-    navigate("/editor", { state: { folder: selectedFolder && selectedFolder !== "__STARRED__" ? selectedFolder : "Default" } });
-
-
+    navigate("/editor", {
+      state: {
+        folder:
+          selectedFolder && selectedFolder !== "__STARRED__"
+            ? selectedFolder
+            : "Default",
+      },
+    });
   };
 
   const handleEditNote = (note: Note) => {
@@ -56,25 +60,19 @@ export default function Dashboard() {
     setNotes((prev) => prev.filter((n) => n._id !== id));
   };
 
-  // ✅ folders derived from notes (single source of truth)
   const folders = Array.from(
     new Set(notes.map((n) => n.folder).filter(Boolean))
   ) as string[];
 
   const filteredNotes = notes.filter((n) => {
-    // ⭐ If Starred Notes selected, only show pinned notes
     if (selectedFolder === "__STARRED__") return n.isPinned;
-
-    // 🔹 Otherwise normal folder filtering
     if (selectedFolder && n.folder !== selectedFolder) return false;
 
-    // 🔹 Search filtering
     return (
       n.title.toLowerCase().includes(search.toLowerCase()) ||
       n.content.toLowerCase().includes(search.toLowerCase())
     );
   });
-
 
   const handleDeleteFolder = async (folder: string) => {
     const token = localStorage.getItem("token");
@@ -96,28 +94,23 @@ export default function Dashboard() {
         },
         body: JSON.stringify({ folder: "Default" }),
       });
-
-
     }
   };
 
-   const handleCreateFolder = () => {
-      const folderName = prompt("Enter folder name");
+  const handleCreateFolder = () => {
+    const folderName = prompt("Enter folder name");
+    if (!folderName) return;
 
-      if (!folderName) return;
+    if (folders.includes(folderName)) {
+      alert("Folder already exists");
+      return;
+    }
 
-      // Check if folder already exists in current notes
-      const existingFolders = Array.from(new Set(notes.map((n) => n.folder).filter(Boolean)));
-      if (existingFolders.includes(folderName)) {
-        alert("Folder already exists");
-        return;
-      }
+    alert("Folder created! Assign notes to it while editing/creating notes.");
+  };
 
-      alert("Folder created! You can now assign notes to this folder when creating/editing a note.");
-    };
   return (
-    <div className="flex h-screen bg-gray-950 text-white overflow-hidden">
-
+    <div className="flex h-230 bg-gray-950 text-white overflow-hidden">
       {/* Desktop Sidebar */}
       <div className="hidden md:block">
         <Sidebar
@@ -129,21 +122,15 @@ export default function Dashboard() {
           onCreateFolder={handleCreateFolder}
         />
       </div>
-    <div className="flex h-190 bg-gray-950 text-white">
-      <Sidebar
-        onNewNote={handleNewNote}
-        folders={uniqueFolders}
-        selectedFolder={selectedFolder}
-        onSelectFolder={setSelectedFolder}
-        onDeleteFolder={handleDeleteFolder}
-      />
 
       {/* Mobile Sidebar */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
-          <div
+          <button
+            type="button"
             className="absolute inset-0 bg-black/50"
             onClick={() => setSidebarOpen(false)}
+            aria-label="Close sidebar"
           />
 
           <div className="absolute left-0 top-0 h-full w-[260px] bg-slate-900">
@@ -163,13 +150,14 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Main */}
+      {/* Main Content */}
       <div className="flex-1 flex flex-col p-4 md:p-8 overflow-y-auto">
         <TopBar
           searchQuery={search}
           setSearchQuery={setSearch}
           onSidebarToggle={() => setSidebarOpen(true)}
         />
+        <WelcomeSection />
 
         {loading ? (
           <p className="text-gray-400 mt-6">Loading notes...</p>

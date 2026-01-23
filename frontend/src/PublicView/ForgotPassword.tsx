@@ -29,7 +29,7 @@ export const ForgotPassword: React.FC = () => {
   const handleBackToLogin = (): void => {
     setIsSubmitted(false);
     setEmail('');
-    window.history.back();
+    globalThis.history.back();
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>): void => {
