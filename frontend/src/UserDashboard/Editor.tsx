@@ -29,6 +29,7 @@ const RichTextEditor: React.FC = () => {
   const [linkUrl, setLinkUrl] = useState("");
   const [linkText, setLinkText] = useState("");
   const savedSelection = useRef<Range | null>(null);
+  const [isPinned, setIsPinned] = useState(false);
 
   const [folder, setFolder] = useState<string>(
     note?.folder || location.state?.folder || "Default"
@@ -93,7 +94,7 @@ const RichTextEditor: React.FC = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ title, content, folder }),
+          body: JSON.stringify({ title, content, folder, isPinned }),
         }
       );
 
@@ -176,7 +177,7 @@ const RichTextEditor: React.FC = () => {
       <div className="flex flex-row sm:flex-row items-center justify-between px-4 sm:px-6 py-4 border-b border-slate-800 gap-3 sm:gap-0">
         <button
           onClick={handleBack}
-          className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors duration-200"
+          className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors duration-200 cursor-pointer"
         >
           <ArrowLeft size={20} />
           <span className="text-lg">Back</span>
@@ -184,7 +185,7 @@ const RichTextEditor: React.FC = () => {
 
         <button
           onClick={handleSave}
-          className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all duration-200 ${isSaved
+          className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer ${isSaved
             ? "bg-green-600 hover:bg-green-700"
             : "bg-blue-600 hover:bg-blue-700"
             }`}
@@ -234,6 +235,16 @@ const RichTextEditor: React.FC = () => {
               placeholder="Select or type folder"
               className="ml-auto sm:ml-4 mt-2 sm:mt-0 bg-gray-800 text-white rounded px-2 py-1 text-sm w-full sm:w-auto"
             />
+            <button
+              type="button"
+              onClick={() => setIsPinned(!isPinned)}
+              className={`flex items-center gap-1 px-2 py-1 rounded cursor-pointer ${isPinned ? "bg-yellow-500 text-white" : "bg-gray-800 text-gray-300"
+                }`}
+            >
+              {isPinned ? "⭐ Star" : "☆ Star"}
+            </button>
+
+
           </div>
 
           {/* Editor Area */}
@@ -286,7 +297,7 @@ const RichTextEditor: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-3 mt-6">
               <button
                 onClick={insertLink}
-                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-medium transition-colors duration-200"
+                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-medium transition-colors duration-200 cursor-pointer"
               >
                 Insert
               </button>
@@ -297,7 +308,7 @@ const RichTextEditor: React.FC = () => {
                   setLinkText("");
                   savedSelection.current = null;
                 }}
-                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded font-medium transition-colors duration-200"
+                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded font-medium transition-colors duration-200 cursor-pointer text-slate-300 hover:text-white"
               >
                 Cancel
               </button>

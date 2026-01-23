@@ -36,8 +36,11 @@ export default function Dashboard() {
     fetchNotes();
   }, []);
 
+
   const handleNewNote = () => {
-    navigate("/editor", { state: { folder: selectedFolder || "Default" } });
+    navigate("/editor", { state: { folder: selectedFolder && selectedFolder !== "__STARRED__" ? selectedFolder : "Default" } });
+
+
   };
 
   const handleEditNote = (note: Note) => {
@@ -53,16 +56,25 @@ export default function Dashboard() {
     setNotes((prev) => prev.filter((n) => n._id !== id));
   };
 
-  const filteredNotes = notes.filter(
-    (n) =>
-      (!selectedFolder || n.folder === selectedFolder) &&
-      (n.title.toLowerCase().includes(search.toLowerCase()) ||
-        n.content.toLowerCase().includes(search.toLowerCase()))
-  );
-
+  // ✅ folders derived from notes (single source of truth)
   const folders = Array.from(
     new Set(notes.map((n) => n.folder).filter(Boolean))
   ) as string[];
+
+  const filteredNotes = notes.filter((n) => {
+    // ⭐ If Starred Notes selected, only show pinned notes
+    if (selectedFolder === "__STARRED__") return n.isPinned;
+
+    // 🔹 Otherwise normal folder filtering
+    if (selectedFolder && n.folder !== selectedFolder) return false;
+
+    // 🔹 Search filtering
+    return (
+      n.title.toLowerCase().includes(search.toLowerCase()) ||
+      n.content.toLowerCase().includes(search.toLowerCase())
+    );
+  });
+
 
   const handleDeleteFolder = async (folder: string) => {
     const token = localStorage.getItem("token");
@@ -84,10 +96,39 @@ export default function Dashboard() {
         },
         body: JSON.stringify({ folder: "Default" }),
       });
+
+
     }
   };
 
+   const handleCreateFolder = () => {
+      const folderName = prompt("Enter folder name");
+
+      if (!folderName) return;
+
+      // Check if folder already exists in current notes
+      const existingFolders = Array.from(new Set(notes.map((n) => n.folder).filter(Boolean)));
+      if (existingFolders.includes(folderName)) {
+        alert("Folder already exists");
+        return;
+      }
+
+      alert("Folder created! You can now assign notes to this folder when creating/editing a note.");
+    };
   return (
+    <div className="flex h-screen bg-gray-950 text-white overflow-hidden">
+
+      {/* Desktop Sidebar */}
+      <div className="hidden md:block">
+        <Sidebar
+          onNewNote={handleNewNote}
+          folders={folders}
+          selectedFolder={selectedFolder}
+          onSelectFolder={setSelectedFolder}
+          onDeleteFolder={handleDeleteFolder}
+          onCreateFolder={handleCreateFolder}
+        />
+      </div>
     <div className="flex h-190 bg-gray-950 text-white">
       <Sidebar
         onNewNote={handleNewNote}
@@ -100,14 +141,12 @@ export default function Dashboard() {
       {/* Mobile Sidebar */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
-          {/* Overlay */}
           <div
             className="absolute inset-0 bg-black/50"
             onClick={() => setSidebarOpen(false)}
           />
 
-          {/* Sidebar */}
-          <div className="absolute left-0 top-0 h-full w-65 bg-slate-900">
+          <div className="absolute left-0 top-0 h-full w-[260px] bg-slate-900">
             <Sidebar
               onNewNote={handleNewNote}
               folders={folders}
@@ -117,12 +156,12 @@ export default function Dashboard() {
                 setSidebarOpen(false);
               }}
               onDeleteFolder={handleDeleteFolder}
-              onClose={() => setSidebarOpen(false)} // ✅ X button works
+              onClose={() => setSidebarOpen(false)}
+              onCreateFolder={handleCreateFolder}
             />
           </div>
         </div>
       )}
-
 
       {/* Main */}
       <div className="flex-1 flex flex-col p-4 md:p-8 overflow-y-auto">
@@ -137,6 +176,7 @@ export default function Dashboard() {
         ) : (
           <NotesList
             notes={filteredNotes}
+            setNotes={setNotes}
             onNew={handleNewNote}
             onEdit={handleEditNote}
             onDelete={handleDeleteNote}

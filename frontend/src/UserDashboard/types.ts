@@ -8,4 +8,5 @@ export interface Note {
   folder?: string;
   createdAt?: string;
   updatedAt?: string;
+  isPinned?: boolean;
 }
