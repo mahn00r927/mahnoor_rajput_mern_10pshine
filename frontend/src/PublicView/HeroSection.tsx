@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-
+import "../App.css"
 export const HeroSection: React.FC = () => {
   const nav = useNavigate();
 
@@ -16,31 +16,47 @@ export const HeroSection: React.FC = () => {
       "
     >
       {/* Decorative Background Elements */}
-      <div className="absolute top-1/4 left-4 sm:left-10 w-56 sm:w-72 h-56 sm:h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-1/4 right-4 sm:right-10 w-72 sm:w-96 h-72 sm:h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute top-1/4 left-4 sm:left-10 w-56 sm:w-72 h-56 sm:h-72 bg-blue-300/20 dark:bg-blue-500/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-1/4 right-4 sm:right-10 w-72 sm:w-96 h-72 sm:h-96 bg-indigo-400/15 dark:bg-cyan-500/5 rounded-full blur-3xl"></div>
 
       <div className="max-w-5xl mx-auto text-center relative z-10">
         
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6 sm:mb-8">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full 
+          bg-blue-100/90 dark:bg-blue-500/10 
+          border border-blue-300/60 dark:border-blue-500/20 
+          mb-6 sm:mb-8
+          shadow-sm dark:shadow-none
+          transition-all duration-300">
           <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-          <span className="text-blue-300 text-xs sm:text-sm font-medium">
+          <span className="text-blue-700 dark:text-blue-300 text-xs sm:text-sm font-semibold transition-colors duration-300">
             Beautifully simple note-taking
           </span>
         </div>
 
         {/* Main Heading */}
         <h1 className="font-bold mb-5 sm:mb-6">
-          <span className="block text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-white mb-2">
+          <span className="block text-4xl sm:text-6xl md:text-7xl lg:text-8xl 
+            text-gray-900 dark:text-white 
+            mb-2 transition-colors duration-300
+            tracking-tight">
             Where your
           </span>
-          <span className="block text-4xl sm:text-6xl md:text-7xl lg:text-8xl bg-linear-to-r from-blue-400 via-blue-500 to-cyan-400 text-transparent bg-clip-text">
+          <span className="block text-4xl sm:text-6xl md:text-7xl lg:text-8xl 
+            bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500
+            dark:from-blue-400 dark:via-blue-500 dark:to-cyan-400 
+            text-transparent bg-clip-text
+            tracking-tight">
             ideas come alive
           </span>
         </h1>
 
         {/* Subheading */}
-        <p className="text-gray-400 text-base sm:text-lg md:text-xl max-w-3xl mx-auto mb-8 sm:mb-12 leading-relaxed">
+        <p className="text-gray-700 dark:text-gray-400 
+          text-base sm:text-lg md:text-xl 
+          max-w-3xl mx-auto mb-8 sm:mb-12 
+          leading-relaxed transition-colors duration-300
+          font-medium">
           A refined space for capturing thoughts, organizing projects, and
           turning scattered ideas into focused action.
         </p>
@@ -50,7 +66,7 @@ export const HeroSection: React.FC = () => {
           onClick={() => nav("/login")}
           className="
             group inline-flex items-center gap-3
-            bg-linear-to-r from-blue-500 to-blue-600
+            bg-gradient-to-r from-blue-500 to-blue-600
             hover:from-blue-600 hover:to-blue-700
             text-white font-semibold
             px-6 py-3 sm:px-8 sm:py-4
@@ -58,7 +74,8 @@ export const HeroSection: React.FC = () => {
             text-base sm:text-lg
             transition-all duration-300
             hover:scale-105
-            hover:shadow-2xl hover:shadow-blue-500/50
+            shadow-lg shadow-blue-400/40
+            hover:shadow-xl hover:shadow-blue-500/50
           "
         >
           Start Writing

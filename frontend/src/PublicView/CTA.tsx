@@ -10,13 +10,14 @@ export const CTASection: React.FC = () => {
 
         {/* CTA Card */}
         <div className="
-          bg-linear-to-br from-gray-900/80 to-gray-800/60
+          bg-gradient-to-br from-white/90 to-gray-50/80 dark:from-gray-900/80 dark:to-gray-800/60
           backdrop-blur-xl
           rounded-2xl sm:rounded-3xl
-          border border-blue-500/10
+          border border-blue-500/20 dark:border-blue-500/10
           p-6 sm:p-10 md:p-14
           text-center
-          shadow-2xl shadow-blue-500/5
+          shadow-2xl shadow-blue-500/10 dark:shadow-blue-500/5
+          transition-colors duration-300
         ">
 
           {/* Icon */}
@@ -37,15 +38,15 @@ export const CTASection: React.FC = () => {
           </div>
 
           {/* Heading */}
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 transition-colors duration-300">
             Ready to start?
           </h2>
 
           {/* Description */}
-          <p className="text-gray-400 text-base sm:text-lg md:text-xl mb-2 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg md:text-xl mb-2 max-w-2xl mx-auto transition-colors duration-300">
             Join thousands who've found their perfect writing space.
           </p>
-          <p className="text-gray-400 text-base sm:text-lg md:text-xl mb-8 sm:mb-10">
+          <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg md:text-xl mb-8 sm:mb-10 transition-colors duration-300">
             Free to start, no credit card required.
           </p>
 
@@ -53,7 +54,7 @@ export const CTASection: React.FC = () => {
           <button
             onClick={() => nav('/signup')}
             className="
-              bg-linear-to-r from-blue-500 to-blue-600
+              bg-gradient-to-r from-blue-500 to-blue-600
               hover:from-blue-600 hover:to-blue-700
               text-white font-semibold
               px-6 py-3 sm:px-8 sm:py-4

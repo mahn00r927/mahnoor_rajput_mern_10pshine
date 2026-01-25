@@ -54,10 +54,10 @@ export const FeaturesSection: React.FC = () => {
 
         {/* Section Header */}
         <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 transition-colors duration-300">
             Designed for focus
           </h2>
-          <p className="text-gray-400 text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
+          <p className="text-gray-700 dark:text-gray-400 text-base sm:text-lg md:text-xl max-w-2xl mx-auto transition-colors duration-300">
             Every feature crafted to help you think clearly and work efficiently.
           </p>
         </div>
@@ -69,18 +69,21 @@ export const FeaturesSection: React.FC = () => {
 
               {/* Icon */}
               <div className="inline-flex items-center justify-center mb-5 sm:mb-6">
-                <div className="bg-linear-to-br from-blue-500/20 to-blue-600/20 p-4 sm:p-6 rounded-3xl border border-blue-500/20 transition-all duration-300 group-hover:border-blue-500/40 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-blue-500/20">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600
+                  border-blue-500/30
+                  group-hover:border-blue-500/50
+                  dark:from-blue-500/20 dark:to-blue-600/20 p-4 sm:p-6 rounded-3xl border dark:border-blue-500/20 transition-all duration-300 dark:group-hover:border-blue-500/40 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-blue-400/30 dark:group-hover:shadow-blue-500/20">
                   {feature.icon}
                 </div>
               </div>
 
               {/* Title */}
-              <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 transition-colors duration-300">
                 {feature.title}
               </h3>
 
               {/* Description */}
-              <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-sm mx-auto">
+              <p className="text-gray-700 dark:text-gray-400 text-sm sm:text-base leading-relaxed max-w-sm mx-auto transition-colors duration-300">
                 {feature.description}
               </p>
 
