@@ -37,7 +37,7 @@ export const HeroSection: React.FC = () => {
         {/* Main Heading */}
         <h1 className="font-bold mb-5 sm:mb-6">
           <span className="block text-4xl sm:text-6xl md:text-7xl lg:text-8xl 
-            text-gray-900 dark:text-white 
+            text-blue-900 dark:text-white 
             mb-2 transition-colors duration-300
             tracking-tight">
             Where your
@@ -76,6 +76,7 @@ export const HeroSection: React.FC = () => {
             hover:scale-105
             shadow-lg shadow-blue-400/40
             hover:shadow-xl hover:shadow-blue-500/50
+            cursor-pointer
           "
         >
           Start Writing

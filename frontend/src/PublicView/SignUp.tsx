@@ -154,7 +154,7 @@ export function Signup() {
             {/* Submit Button */}
             <button
               onClick={handleSignup}
-              className="w-full bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-2.5 sm:py-3 rounded-lg transition-all duration-200 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-2.5 sm:py-3 rounded-lg transition-all duration-200 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
             >
               Create Account
             </button>
@@ -166,7 +166,7 @@ export function Signup() {
               Already have an account?{" "}
               <button
                 type="button"
-                className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                className="text-blue-400 hover:text-blue-300 font-medium transition-colors cursor-pointer"
                 onClick={() => nav("/login")}
               >
                 Sign in
