@@ -28,7 +28,7 @@ function App() {
       document.documentElement.classList.remove("dark");
       // Set default theme as light if not set
       if (!theme) {
-        localStorage.setItem("theme", "light");
+        localStorage.setItem("theme", "dark");
       }
     }
   }, []);
