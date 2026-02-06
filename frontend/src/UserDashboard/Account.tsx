@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { User, Mail, Lock, Eye, EyeOff, Save, Settings, Shield, Loader2, ArrowLeft } from 'lucide-react';
+import { User, Mail, Lock, Save, Settings, Shield, Loader2, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const API_URL = 'http://localhost:5000/api/users';
@@ -420,7 +420,6 @@ export default function AccountSettings() {
                       onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
                     >
-                      {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                 </div>
@@ -445,7 +444,6 @@ export default function AccountSettings() {
                       onClick={() => setShowNewPassword(!showNewPassword)}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
                     >
-                      {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                   <p className="text-xs text-slate-400 mt-2">
@@ -473,7 +471,6 @@ export default function AccountSettings() {
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
                     >
-                      {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                 </div>
