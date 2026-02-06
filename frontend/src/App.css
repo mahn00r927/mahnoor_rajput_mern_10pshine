@@ -1,26 +1,32 @@
 @import "tailwindcss";
-/* SmartNotes - Global Background Styling */
+/* SmartNotes - Professional Theme */
 
-/* Main App Container - Single Unified Background */
 html,
 body {
   margin: 0;
   padding: 0;
-  background-color: #020617;
-  overflow-y: auto;   /* ✅ */
+  overflow-y: auto;
   overflow-x: hidden;
+  transition: background-color 0.3s ease;
 }
 
+/* =========================================================
+   DARK THEME (UNCHANGED — DO NOT TOUCH)
+   ========================================================= */
+html.dark,
+html.dark body {
+  background-color: #020617;
+}
 
-.app-container {
+html.dark .app-container {
   min-height: 100vh;
   background: linear-gradient(to bottom right, #0f172a, #000000, #172554);
   position: relative;
   overflow-x: hidden;
+  transition: background 0.3s ease;
 }
 
-/* Decorative Background Elements */
-.app-container::before {
+html.dark .app-container::before {
   content: '';
   position: fixed;
   top: 25%;
@@ -35,7 +41,7 @@ body {
   z-index: 0;
 }
 
-.app-container::after {
+html.dark .app-container::after {
   content: '';
   position: fixed;
   bottom: 25%;
@@ -50,37 +56,93 @@ body {
   z-index: 0;
 }
 
-/* Reset background for all sections */
+/* =========================================================
+   LIGHT THEME (REFERENCE-MATCHED, CLEAN & WHITE)
+   ========================================================= */
+html:not(.dark),
+html:not(.dark) body {
+  background-color: #ffffff;
+  color: #1e293b; /* Slate-800 for better readability than pure black */
+}
+
+html:not(.dark) .app-container {
+  min-height: 100vh;
+  background-color: #ffffff;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.03) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.03) 0px, transparent 50%);
+  position: relative;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease;
+}
+
+/* Subtle ambient glow for Light Mode to match premium feel */
+html:not(.dark) .app-container::before {
+  content: '';
+  position: fixed;
+  top: -10%;
+  right: -5%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: float-light 15s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+
+html:not(.dark) .app-container::after {
+  content: '';
+  position: fixed;
+  bottom: -10%;
+  left: -5%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.06) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: float-light-reverse 20s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* =========================================================
+   GLOBAL SECTION HANDLING
+   ========================================================= */
 section {
   background: transparent !important;
   position: relative;
   z-index: 1;
 }
 
-/* Animations */
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
 @keyframes pulse-slow {
-  0%, 100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(1.1);
-  }
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
 }
 
 @keyframes pulse-slow-delay {
-  0%, 100% {
-    opacity: 0.2;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.4;
-    transform: scale(1.1);
-  }
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.1); }
 }
 
-/* Body Reset */
+/* Smooth floating animations for light mode */
+@keyframes float-light {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-20px, 20px); }
+}
+
+@keyframes float-light-reverse {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(20px, -20px); }
+}
+
+/* =========================================================
+   BASE TYPOGRAPHY
+   ========================================================= */
 body {
   margin: 0;
   padding: 0;
@@ -91,45 +153,63 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth Scrolling */
 html {
   scroll-behavior: smooth;
 }
 
 * {
   box-sizing: border-box;
-   scrollbar-width: none;
+  scrollbar-width: none;
 }
 
-
-/* 🔥 FORCE LTR FOR EDITOR */
+/* =========================================================
+   CONTENTEDITABLE FIX
+   ========================================================= */
 [contenteditable="true"] {
   direction: ltr !important;
   unicode-bidi: plaintext !important;
   text-align: left !important;
 }
 
-/* Super thin scrollbar, invisible track, small thumb */
-.scrollbar-thin-invisible::-webkit-scrollbar {
-  width: 4px;       /* super thin */
+/* =========================================================
+   SCROLLBARS (Matched to Blue Theme)
+   ========================================================= */
+
+/* Dark Mode Scrollbar */
+html.dark .scrollbar-thin-invisible::-webkit-scrollbar {
+  width: 4px;
+}
+html.dark .scrollbar-thin-invisible::-webkit-scrollbar-track {
+  background: transparent;
+}
+html.dark .scrollbar-thin-invisible::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+}
+html.dark .scrollbar-thin-invisible {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
 }
 
-.scrollbar-thin-invisible::-webkit-scrollbar-track {
-  background: transparent;  /* NO background */
+/* Light Mode Scrollbar - Blue Accent */
+html:not(.dark) .scrollbar-thin-invisible::-webkit-scrollbar {
+  width: 4px;
+}
+html:not(.dark) .scrollbar-thin-invisible::-webkit-scrollbar-track {
+  background: transparent;
+}
+html:not(.dark) .scrollbar-thin-invisible::-webkit-scrollbar-thumb {
+  background-color: rgba(59, 130, 246, 0.4); /* Blue-500 with opacity */
+  border-radius: 9999px;
+}
+html:not(.dark) .scrollbar-thin-invisible:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(59, 130, 246, 0.6);
+}
+html:not(.dark) .scrollbar-thin-invisible {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(59, 130, 246, 0.4) transparent;
 }
 
-.scrollbar-thin-invisible::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.3); /* faint white */
-  border-radius: 9999px;   /* rounded */
-}
-
-.scrollbar-thin-invisible {
-  scrollbar-width: thin; /* for Firefox */
-  scrollbar-color: rgba(255,255,255,0.3) transparent; /* thumb track */
-}
-
-
-/* Chrome, Edge, Safari */
 ::-webkit-scrollbar {
   width: 0px;
 }

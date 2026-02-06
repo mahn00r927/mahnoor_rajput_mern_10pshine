@@ -73,7 +73,7 @@ describe('HeroSection Component', () => {
       const svg = button.querySelector('svg');
       
       expect(svg).toBeInTheDocument();
-      expect(svg).toHaveClass('w-5', 'h-5');
+      expect(svg).toHaveClass('w-4', 'h-4');
     });
 
     it('should render pulsing dot in badge', () => {
@@ -102,7 +102,7 @@ describe('HeroSection Component', () => {
     it('should have correct styling classes on section', () => {
       renderWithRouter(<HeroSection />);
       
-      const section = screen.getByRole('region');
+      const section = screen.getByLabelText('Hero section');
       expect(section).toHaveClass('min-h-screen', 'flex', 'items-center', 'justify-center');
     });
 
@@ -124,7 +124,7 @@ describe('HeroSection Component', () => {
       renderWithRouter(<HeroSection />);
       
       const subheading = screen.getByText(/A refined space for capturing thoughts/i);
-      expect(subheading).toHaveClass('text-gray-400');
+      expect(subheading).toHaveClass('text-gray-700');
     });
   });
 

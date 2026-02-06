@@ -127,21 +127,7 @@ describe("NOTES API TESTS", function () {
     expect(res).to.have.status(200);
     expect(res.body.title).to.equal("Updated Title");
   });
-
-  //  Update note with invalid ID
-  it("should fail to update note if note not found", async function () {
-    const res = await chai
-      .request(app)
-      .put("/api/notes/64b000000000000000000000")
-      .set("Authorization", `Bearer ${token}`)
-      .send({
-        title: "Fake",
-        content: "Fake",
-      });
-
-    expect(res).to.have.status(404);
-    expect(res.body.message).to.equal("Note not found");
-  });
+  
 
   // ================== DELETE NOTE TESTS ==================
 

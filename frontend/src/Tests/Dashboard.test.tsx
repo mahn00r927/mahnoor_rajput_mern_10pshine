@@ -15,13 +15,13 @@ vi.mock("react-router-dom", async () => {
 });
 
 // ✅ mock child components
-vi.mock("../Sidebar", () => ({
+vi.mock("../UserDashboard/Sidebar", () => ({
   default: ({ onNewNote }: any) => (
     <button onClick={onNewNote}>New Note</button>
   ),
 }));
 
-vi.mock("../Navbar", () => ({
+vi.mock("../UserDashboard/Navbar", () => ({
   default: ({ setSearchQuery }: any) => (
     <input
       placeholder="search"
@@ -30,7 +30,7 @@ vi.mock("../Navbar", () => ({
   ),
 }));
 
-vi.mock("../NotesList", () => ({
+vi.mock("../UserDashboard/NotesList", () => ({
   default: ({ notes, onDelete }: any) => (
     <div>
       {notes.map((n: any) => (
@@ -41,6 +41,10 @@ vi.mock("../NotesList", () => ({
       ))}
     </div>
   ),
+}));
+
+vi.mock("../UserDashboard/Welcome", () => ({
+  default: () => <div>Welcome</div>,
 }));
 
 // ✅ helper
@@ -70,7 +74,7 @@ describe("Dashboard Component", () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => [
-        { _id: "1", title: "Test Note" },
+        { _id: "1", title: "Test Note", content: "Body" },
       ],
     }) as any;
 
@@ -92,17 +96,19 @@ describe("Dashboard Component", () => {
     const btn = await screen.findByText("New Note");
     btn.click();
 
-    expect(mockNavigate).toHaveBeenCalledWith("/editor");
+    expect(mockNavigate).toHaveBeenCalledWith("/editor", {
+      state: { folder: "Default" },
+    });
   });
 
   it("filters notes by search", async () => {
-  global.fetch = vi.fn().mockResolvedValue({
-    ok: true,
-    json: async () => [
-      { _id: "1", title: "React Note" },
-      { _id: "2", title: "Node Note" },
-    ],
-  }) as any;
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => [
+        { _id: "1", title: "React Note", content: "React content" },
+        { _id: "2", title: "Node Note", content: "Node content" },
+      ],
+    }) as any;
 
   renderDashboard();
 
@@ -110,7 +116,7 @@ describe("Dashboard Component", () => {
     expect(screen.getByText("React Note")).toBeInTheDocument()
   );
 
-  const search = screen.getByPlaceholderText(/search notes/i);
+  const search = screen.getByPlaceholderText(/search/i);
 
   fireEvent.change(search, { target: { value: "React" } });
 
@@ -123,7 +129,7 @@ describe("Dashboard Component", () => {
     global.fetch = vi.fn()
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => [{ _id: "1", title: "Delete Me" }],
+        json: async () => [{ _id: "1", title: "Delete Me", content: "Body" }],
       })
       .mockResolvedValueOnce({ ok: true }) as any;
 

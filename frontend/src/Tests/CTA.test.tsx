@@ -31,55 +31,35 @@ describe('CTASection Component', () => {
       expect(section).toBeInTheDocument();
     });
 
-    it('should display the main heading "Ready to start?"', () => {
+    it('should display the main heading', () => {
       renderWithRouter(<CTASection />);
       
-      const heading = screen.getByRole('heading', { name: /ready to start/i });
+      const heading = screen.getByRole('heading', { name: /ready to organize your thoughts/i });
       expect(heading).toBeInTheDocument();
     });
 
-    it('should display the first description paragraph', () => {
+    it('should display the description paragraph', () => {
       renderWithRouter(<CTASection />);
       
-      const description1 = screen.getByText(/join thousands who've found their perfect writing space/i);
-      expect(description1).toBeInTheDocument();
+      const description = screen.getByText(
+        /join thousands of happy users who have transformed how they capture and organize ideas/i
+      );
+      expect(description).toBeInTheDocument();
     });
 
-    it('should display the second description paragraph', () => {
+    it('should display "Get Started" button', () => {
       renderWithRouter(<CTASection />);
       
-      const description2 = screen.getByText(/free to start, no credit card required/i);
-      expect(description2).toBeInTheDocument();
-    });
-
-    it('should display "Create Free Account" button', () => {
-      renderWithRouter(<CTASection />);
-      
-      const button = screen.getByRole('button', { name: /create free account/i });
+      const button = screen.getByRole('button', { name: /get started/i });
       expect(button).toBeInTheDocument();
-    });
-
-    it('should render lightning bolt SVG icon', () => {
-      const { container } = renderWithRouter(<CTASection />);
-      
-      const svg = container.querySelector('svg');
-      expect(svg).toBeInTheDocument();
-      expect(svg).toHaveClass('w-16', 'h-16', 'text-blue-500');
-    });
-
-    it('should have lightning bolt path in SVG', () => {
-      const { container } = renderWithRouter(<CTASection />);
-      
-      const path = container.querySelector('path[d="M13 10V3L4 14h7v7l9-11h-7z"]');
-      expect(path).toBeInTheDocument();
     });
   });
 
   describe('Navigation', () => {
-    it('should navigate to /signup when "Create Free Account" button is clicked', () => {
+    it('should navigate to /signup when "Get Started" button is clicked', () => {
       renderWithRouter(<CTASection />);
       
-      const button = screen.getByRole('button', { name: /create free account/i });
+      const button = screen.getByRole('button', { name: /get started/i });
       fireEvent.click(button);
       
       expect(mockNavigate).toHaveBeenCalledWith('/signup');
@@ -92,36 +72,38 @@ describe('CTASection Component', () => {
       const { container } = renderWithRouter(<CTASection />);
       
       const section = container.querySelector('section');
-      expect(section).toHaveClass('min-h-screen', 'flex', 'items-center', 'justify-center');
+      expect(section).toHaveClass('flex', 'items-center', 'justify-center', 'px-4', 'py-20');
     });
 
     it('should have correct styling on CTA button', () => {
       renderWithRouter(<CTASection />);
       
-      const button = screen.getByRole('button', { name: /create free account/i });
+      const button = screen.getByRole('button', { name: /get started/i });
       expect(button).toHaveClass('text-white', 'font-semibold', 'rounded-full');
     });
 
     it('should have correct styling on main heading', () => {
       renderWithRouter(<CTASection />);
       
-      const heading = screen.getByRole('heading', { name: /ready to start/i });
-      expect(heading).toHaveClass('text-4xl', 'font-bold', 'text-white', 'mb-6');
+      const heading = screen.getByRole('heading', { name: /ready to organize your thoughts/i });
+      expect(heading).toHaveClass('text-3xl', 'font-bold', 'text-slate-900', 'mb-6');
     });
 
     it('should have correct text color on description paragraphs', () => {
       renderWithRouter(<CTASection />);
       
-      const description1 = screen.getByText(/join thousands who've found their perfect writing space/i);
-      expect(description1).toHaveClass('text-gray-400');
+      const description = screen.getByText(
+        /join thousands of happy users who have transformed how they capture and organize ideas/i
+      );
+      expect(description).toHaveClass('text-gray-500');
     });
 
     it('should have gradient background on CTA card', () => {
       const { container } = renderWithRouter(<CTASection />);
       
-      const card = container.querySelector('.bg-linear-to-br');
+      const card = container.querySelector('.bg-white');
       expect(card).toBeInTheDocument();
-      expect(card).toHaveClass('rounded-3xl', 'border');
+      expect(card).toHaveClass('rounded-[2.5rem]', 'border');
     });
   });
 
@@ -131,35 +113,34 @@ describe('CTASection Component', () => {
       
       const heading = screen.getByRole('heading', { level: 2 });
       expect(heading).toBeInTheDocument();
-      expect(heading).toHaveTextContent('Ready to start?');
+      expect(heading).toHaveTextContent('Ready to organize your thoughts?');
     });
 
     it('should display all content in correct order', () => {
       const { container } = renderWithRouter(<CTASection />);
       
-      // Check SVG is rendered first
-      const svg = container.querySelector('svg');
-      expect(svg).toBeInTheDocument();
-      
       // Check heading
-      expect(screen.getByRole('heading', { name: /ready to start/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: /ready to organize your thoughts/i })
+      ).toBeInTheDocument();
       
-      // Check descriptions
-      expect(screen.getByText(/join thousands/i)).toBeInTheDocument();
-      expect(screen.getByText(/free to start/i)).toBeInTheDocument();
+      // Check description
+      expect(
+        screen.getByText(/join thousands of happy users who have transformed how they capture and organize ideas/i)
+      ).toBeInTheDocument();
       
       // Check button is last
-      expect(screen.getByRole('button', { name: /create free account/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /get started/i })).toBeInTheDocument();
     });
 
-    it('should have both description paragraphs with correct text size', () => {
+    it('should have description paragraph with correct text size', () => {
       renderWithRouter(<CTASection />);
       
-      const description1 = screen.getByText(/join thousands who've found their perfect writing space/i);
-      const description2 = screen.getByText(/free to start, no credit card required/i);
+      const description = screen.getByText(
+        /join thousands of happy users who have transformed how they capture and organize ideas/i
+      );
       
-      expect(description1).toHaveClass('text-lg');
-      expect(description2).toHaveClass('text-lg');
+      expect(description).toHaveClass('text-lg');
     });
   });
 
@@ -167,14 +148,14 @@ describe('CTASection Component', () => {
     it('should have accessible button with proper text', () => {
       renderWithRouter(<CTASection />);
       
-      const button = screen.getByRole('button', { name: /create free account/i });
+      const button = screen.getByRole('button', { name: /get started/i });
       expect(button).toHaveAccessibleName();
     });
 
     it('should have accessible heading', () => {
       renderWithRouter(<CTASection />);
       
-      const heading = screen.getByRole('heading', { name: /ready to start/i });
+      const heading = screen.getByRole('heading', { name: /ready to organize your thoughts/i });
       expect(heading).toHaveAccessibleName();
     });
   });
@@ -183,14 +164,14 @@ describe('CTASection Component', () => {
     it('should have clickable button', () => {
       renderWithRouter(<CTASection />);
       
-      const button = screen.getByRole('button', { name: /create free account/i });
+      const button = screen.getByRole('button', { name: /get started/i });
       expect(button).toBeEnabled();
     });
 
     it('should trigger navigation only once per click', () => {
       renderWithRouter(<CTASection />);
       
-      const button = screen.getByRole('button', { name: /create free account/i });
+      const button = screen.getByRole('button', { name: /get started/i });
       
       fireEvent.click(button);
       fireEvent.click(button);

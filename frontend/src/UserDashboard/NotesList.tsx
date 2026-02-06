@@ -18,7 +18,6 @@ interface Props {
   readonly setNotes: Dispatch<SetStateAction<Note[]>>;
 }
 
-
 const NOTES_PER_PAGE = 9;
 
 export default function NotesList({
@@ -29,6 +28,10 @@ export default function NotesList({
   setNotes,
 }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [confirm, setConfirm] = useState<{ show: boolean; noteId: string | null }>({
+    show: false,
+    noteId: null,
+  });
 
   // 🔹 Sort pinned notes first
   const sortedNotes = [...notes].sort(
@@ -61,6 +64,14 @@ export default function NotesList({
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const openConfirm = (id: string) => setConfirm({ show: true, noteId: id });
+  const closeConfirm = () => setConfirm({ show: false, noteId: null });
+
+  const handleConfirmDelete = () => {
+    if (confirm.noteId) onDelete(confirm.noteId);
+    closeConfirm();
   };
 
   if (!notes || notes.length === 0) {
@@ -136,7 +147,7 @@ export default function NotesList({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onDelete(note._id);
+                  openConfirm(note._id);
                 }}
                 className="flex items-center gap-1 text-red-400 text-xs hover:text-red-500"
               >
@@ -170,6 +181,40 @@ export default function NotesList({
           >
             Next <ChevronRight size={16} />
           </button>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {confirm.show && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 rounded-2xl shadow-2xl max-w-md w-full">
+            <div className="px-6 py-4 border-b border-slate-700/50 bg-red-500/10">
+              <h3 className="text-lg font-semibold text-red-400">
+                Confirm Deletion
+              </h3>
+            </div>
+
+            <div className="px-6 py-4">
+              <p className="text-slate-300 text-sm leading-relaxed">
+                Are you sure you want to delete this note? This action cannot be undone.
+              </p>
+            </div>
+
+            <div className="px-6 py-4 border-t border-slate-700/50 flex justify-end gap-3">
+              <button
+                onClick={closeConfirm}
+                className="px-4 py-2 rounded-lg font-medium bg-slate-700/50 text-slate-200 hover:bg-slate-700"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmDelete}
+                className="px-4 py-2 rounded-lg font-medium bg-red-500/20 text-red-400 hover:bg-red-500/30"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </>
