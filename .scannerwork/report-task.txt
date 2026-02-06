@@ -2,5 +2,5 @@ projectKey=Smart-Notes
 serverUrl=http://localhost:9000
 serverVersion=26.1.0.118079
 dashboardUrl=http://localhost:9000/dashboard?id=Smart-Notes
-ceTaskId=b85f667e-b49f-415c-b3de-33e5aa5af433
-ceTaskUrl=http://localhost:9000/api/ce/task?id=b85f667e-b49f-415c-b3de-33e5aa5af433
+ceTaskId=29d7c54f-9d57-43a9-b411-4c7cb1298bc1
+ceTaskUrl=http://localhost:9000/api/ce/task?id=29d7c54f-9d57-43a9-b411-4c7cb1298bc1
