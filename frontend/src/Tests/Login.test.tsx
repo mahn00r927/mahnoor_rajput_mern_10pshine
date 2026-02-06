@@ -134,10 +134,7 @@ describe('Login Component', () => {
       expect(passwordInput).toHaveAttribute('type', 'password');
     });
 
-    it('navigates back when back button is clicked', () => {
-      const mockBack = vi.fn();
-      window.history.back = mockBack;
-
+    it('navigates to home when back button is clicked', () => {
       render(
         <BrowserRouter>
           <Login />
@@ -147,7 +144,7 @@ describe('Login Component', () => {
       const backButton = screen.getByRole('button', { name: /back/i });
       fireEvent.click(backButton);
 
-      expect(mockBack).toHaveBeenCalledOnce();
+      expect(mockNavigate).toHaveBeenCalledWith('/');
     });
 
     it('navigates to signup page when sign up link is clicked', () => {

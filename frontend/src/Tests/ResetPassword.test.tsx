@@ -37,8 +37,8 @@ describe('ResetPassword Component', () => {
     renderWithRouter();
 
     expect(screen.getByText('Reset your password')).toBeInTheDocument();
-    expect(screen.getByLabelText('New Password')).toBeInTheDocument();
-    expect(screen.getByLabelText('Confirm Password')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/enter new password/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/confirm new password/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /reset password/i })).toBeInTheDocument();
   });
 
@@ -58,10 +58,10 @@ describe('ResetPassword Component', () => {
   it('should show error when passwords do not match', async () => {
     renderWithRouter();
 
-    fireEvent.change(screen.getByLabelText('New Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/enter new password/i), {
       target: { value: 'Test123!@#' },
     });
-    fireEvent.change(screen.getByLabelText('Confirm Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/confirm new password/i), {
       target: { value: 'Different123!@#' },
     });
 
@@ -72,10 +72,10 @@ describe('ResetPassword Component', () => {
   it('should show error when password does not meet requirements', async () => {
     renderWithRouter();
 
-    fireEvent.change(screen.getByLabelText('New Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/enter new password/i), {
       target: { value: 'weak' },
     });
-    fireEvent.change(screen.getByLabelText('Confirm Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/confirm new password/i), {
       target: { value: 'weak' },
     });
 
@@ -89,7 +89,7 @@ describe('ResetPassword Component', () => {
   it('should show weak password strength', () => {
     renderWithRouter();
 
-    fireEvent.change(screen.getByLabelText('New Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/enter new password/i), {
       target: { value: 'test12' },
     });
 
@@ -99,7 +99,7 @@ describe('ResetPassword Component', () => {
   it('should show medium password strength', () => {
     renderWithRouter();
 
-    fireEvent.change(screen.getByLabelText('New Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/enter new password/i), {
       target: { value: 'Test1234' },
     });
 
@@ -109,7 +109,7 @@ describe('ResetPassword Component', () => {
   it('should show strong password strength', () => {
     renderWithRouter();
 
-    fireEvent.change(screen.getByLabelText('New Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/enter new password/i), {
       target: { value: 'Test123!@#' },
     });
 
@@ -119,7 +119,7 @@ describe('ResetPassword Component', () => {
   it('should update password requirement indicators', () => {
     renderWithRouter();
 
-    const passwordInput = screen.getByLabelText('New Password');
+    const passwordInput = screen.getByPlaceholderText(/enter new password/i);
 
     // Initially all requirements should show circles
     fireEvent.change(passwordInput, { target: { value: '' } });
@@ -139,10 +139,10 @@ describe('ResetPassword Component', () => {
   /* ---------------- PASSWORD VISIBILITY TOGGLE ---------------- */
 
   it('should toggle password visibility', () => {
-    renderWithRouter();
+    const { container } = renderWithRouter();
 
-    const newPasswordInput = screen.getByLabelText('New Password');
-    const toggleButtons = screen.getAllByRole('button', { name: '' });
+    const newPasswordInput = screen.getByPlaceholderText(/enter new password/i);
+    const toggleButtons = container.querySelectorAll('button[type="button"]');
 
     expect(newPasswordInput).toHaveAttribute('type', 'password');
 
@@ -154,10 +154,10 @@ describe('ResetPassword Component', () => {
   });
 
   it('should toggle confirm password visibility', () => {
-    renderWithRouter();
+    const { container } = renderWithRouter();
 
-    const confirmPasswordInput = screen.getByLabelText('Confirm Password');
-    const toggleButtons = screen.getAllByRole('button', { name: '' });
+    const confirmPasswordInput = screen.getByPlaceholderText(/confirm new password/i);
+    const toggleButtons = container.querySelectorAll('button[type="button"]');
 
     expect(confirmPasswordInput).toHaveAttribute('type', 'password');
 
@@ -168,40 +168,6 @@ describe('ResetPassword Component', () => {
     expect(confirmPasswordInput).toHaveAttribute('type', 'password');
   });
 
-  /* ---------------- API INTEGRATION ---------------- */
-
-  // it('should show success screen and redirect after successful reset', async () => {
-  //   vi.useFakeTimers();
-
-  //   global.fetch = vi.fn().mockResolvedValueOnce({
-  //     ok: true,
-  //     json: async () => ({ message: 'Password reset successful' }),
-  //   });
-
-  //   renderWithRouter();
-
-  //   fireEvent.change(screen.getByLabelText('New Password'), {
-  //     target: { value: 'Test123!@#' },
-  //   });
-  //   fireEvent.change(screen.getByLabelText('Confirm Password'), {
-  //     target: { value: 'Test123!@#' },
-  //   });
-
-  //   fireEvent.click(screen.getByRole('button', { name: /reset password/i }));
-
-  //   // Wait for success message
-  //   await waitFor(() => {
-  //     expect(screen.getByText('Password Reset Successfully!')).toBeInTheDocument();
-  //   });
-
-  //   // Run timers to trigger navigation
-  //   vi.runAllTimers();
-
-  //   // Verify navigation was called
-  //   await waitFor(() => {
-  //     expect(mockNavigate).toHaveBeenCalledWith('/login');
-  //   });
-  // });
 
   it('should show error message when API returns error', async () => {
     global.fetch = vi.fn().mockResolvedValueOnce({
@@ -211,10 +177,10 @@ describe('ResetPassword Component', () => {
 
     renderWithRouter();
 
-    fireEvent.change(screen.getByLabelText('New Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/enter new password/i), {
       target: { value: 'Test123!@#' },
     });
-    fireEvent.change(screen.getByLabelText('Confirm Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/confirm new password/i), {
       target: { value: 'Test123!@#' },
     });
 
@@ -230,10 +196,10 @@ describe('ResetPassword Component', () => {
 
     renderWithRouter();
 
-    fireEvent.change(screen.getByLabelText('New Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/enter new password/i), {
       target: { value: 'Test123!@#' },
     });
-    fireEvent.change(screen.getByLabelText('Confirm Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/confirm new password/i), {
       target: { value: 'Test123!@#' },
     });
 
@@ -252,10 +218,10 @@ describe('ResetPassword Component', () => {
 
     renderWithRouter('my-test-token');
 
-    fireEvent.change(screen.getByLabelText('New Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/enter new password/i), {
       target: { value: 'Test123!@#' },
     });
-    fireEvent.change(screen.getByLabelText('Confirm Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/confirm new password/i), {
       target: { value: 'Test123!@#' },
     });
 
@@ -286,14 +252,14 @@ describe('ResetPassword Component', () => {
 
     renderWithRouter();
 
-    fireEvent.change(screen.getByLabelText('New Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/enter new password/i), {
       target: { value: 'Test123!@#' },
     });
-    fireEvent.change(screen.getByLabelText('Confirm Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/confirm new password/i), {
       target: { value: 'Test123!@#' },
     });
 
-    fireEvent.keyDown(screen.getByLabelText('New Password'), {
+    fireEvent.keyDown(screen.getByPlaceholderText(/enter new password/i), {
       key: 'Enter',
       code: 'Enter',
     });
@@ -311,14 +277,14 @@ describe('ResetPassword Component', () => {
 
     renderWithRouter();
 
-    fireEvent.change(screen.getByLabelText('New Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/enter new password/i), {
       target: { value: 'Test123!@#' },
     });
-    fireEvent.change(screen.getByLabelText('Confirm Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/confirm new password/i), {
       target: { value: 'Test123!@#' },
     });
 
-    fireEvent.keyDown(screen.getByLabelText('Confirm Password'), {
+    fireEvent.keyDown(screen.getByPlaceholderText(/confirm new password/i), {
       key: 'Enter',
       code: 'Enter',
     });
@@ -340,10 +306,10 @@ describe('ResetPassword Component', () => {
   it('should enable submit button when both fields are filled', () => {
     renderWithRouter();
 
-    fireEvent.change(screen.getByLabelText('New Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/enter new password/i), {
       target: { value: 'Test123!@#' },
     });
-    fireEvent.change(screen.getByLabelText('Confirm Password'), {
+    fireEvent.change(screen.getByPlaceholderText(/confirm new password/i), {
       target: { value: 'Test123!@#' },
     });
 

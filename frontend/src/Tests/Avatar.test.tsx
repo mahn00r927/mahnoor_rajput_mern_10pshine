@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import UserAvatar from "../UserDashboard/Avatar";
 
 describe("UserAvatar Component", () => {
@@ -11,11 +12,9 @@ describe("UserAvatar Component", () => {
 
   const renderAvatar = () =>
     render(
-      <UserAvatar
-        name="Mahnoor"
-        email="mahnoor@test.com"
-        onLogout={mockLogout}
-      />
+      <MemoryRouter>
+        <UserAvatar name="Mahnoor" onLogout={mockLogout} />
+      </MemoryRouter>
     );
 
   it("renders avatar with initial letter", () => {
@@ -29,7 +28,6 @@ describe("UserAvatar Component", () => {
     fireEvent.click(screen.getByText("M"));
 
     expect(screen.getByText("Account")).toBeInTheDocument();
-    expect(screen.getByText("mahnoor@test.com")).toBeInTheDocument();
     expect(screen.getByText("Log out")).toBeInTheDocument();
   });
 
@@ -55,7 +53,9 @@ describe("UserAvatar Component", () => {
 
   it("shows ? when name is empty", () => {
     render(
-      <UserAvatar name="" email="test@test.com" onLogout={mockLogout} />
+      <MemoryRouter>
+        <UserAvatar name="" onLogout={mockLogout} />
+      </MemoryRouter>
     );
 
     expect(screen.getByText("?")).toBeInTheDocument();

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, EyeOff, Mail, Lock, ArrowLeft } from "lucide-react";
+import { Mail, Lock, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export function Login() {
@@ -54,7 +54,7 @@ export function Login() {
   };
 
   const handleGoBack = () => {
-  nav('http://localhost:5173/')
+  nav('/')
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -145,7 +145,7 @@ export function Login() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 transition-colors"
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {/* {showPassword ? <EyeOff size={18} /> : <Eye size={18} />} */}
                 </button>
               </div>
             </div>

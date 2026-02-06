@@ -33,14 +33,18 @@ describe("TopBar Component", () => {
   const renderTopBar = () =>
     render(
       <BrowserRouter>
-        <TopBar searchQuery="" setSearchQuery={mockSetSearch} />
+        <TopBar
+          searchQuery=""
+          setSearchQuery={mockSetSearch}
+          onSidebarToggle={vi.fn()}
+        />
       </BrowserRouter>
     );
 
   it("renders search input", () => {
     renderTopBar();
     expect(
-      screen.getByPlaceholderText(/search notes/i)
+      screen.getByPlaceholderText(/search notes\.\.\./i)
     ).toBeInTheDocument();
   });
 
@@ -48,7 +52,7 @@ describe("TopBar Component", () => {
     renderTopBar();
 
     fireEvent.change(
-      screen.getByPlaceholderText(/search notes/i),
+      screen.getByPlaceholderText(/search notes\.\.\./i),
       { target: { value: "React" } }
     );
 

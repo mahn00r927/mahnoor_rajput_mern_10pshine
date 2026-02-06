@@ -23,7 +23,15 @@ describe("NotesList Component", () => {
 
   it("renders 'No notes yet' when notes list is empty", () => {
     const onNew = vi.fn();
-    render(<NotesList notes={[]} onEdit={vi.fn()} onDelete={vi.fn()} onNew={onNew} />);
+    render(
+      <NotesList
+        notes={[]}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+        onNew={onNew}
+        setNotes={vi.fn()}
+      />
+    );
 
     expect(screen.getByText("No notes yet")).toBeInTheDocument();
     const createBtn = screen.getByText("+ Create Note");
@@ -34,7 +42,15 @@ describe("NotesList Component", () => {
   });
 
   it("renders notes correctly", () => {
-    render(<NotesList notes={sampleNotes} onEdit={vi.fn()} onDelete={vi.fn()} onNew={vi.fn()} />);
+    render(
+      <NotesList
+        notes={sampleNotes}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+        onNew={vi.fn()}
+        setNotes={vi.fn()}
+      />
+    );
 
     expect(screen.getByText("Note 1")).toBeInTheDocument();
     expect(screen.getByText("Note 2")).toBeInTheDocument();
@@ -42,18 +58,32 @@ describe("NotesList Component", () => {
 
   it("calls onEdit when note card is clicked", () => {
     const onEdit = vi.fn();
-    render(<NotesList notes={sampleNotes} onEdit={onEdit} onDelete={vi.fn()} onNew={vi.fn()} />);
+    render(
+      <NotesList
+        notes={sampleNotes}
+        onEdit={onEdit}
+        onDelete={vi.fn()}
+        onNew={vi.fn()}
+        setNotes={vi.fn()}
+      />
+    );
 
-    const noteCard = screen.getByText("Note 1").closest("div");
-    if (!noteCard) throw new Error("Note card not found");
-
+    const noteCard = screen.getByRole("button", { name: /note 1/i });
     fireEvent.click(noteCard);
     expect(onEdit).toHaveBeenCalledWith(sampleNotes[0]);
   });
 
   it("calls onEdit when Edit button is clicked", () => {
     const onEdit = vi.fn();
-    render(<NotesList notes={sampleNotes} onEdit={onEdit} onDelete={vi.fn()} onNew={vi.fn()} />);
+    render(
+      <NotesList
+        notes={sampleNotes}
+        onEdit={onEdit}
+        onDelete={vi.fn()}
+        onNew={vi.fn()}
+        setNotes={vi.fn()}
+      />
+    );
 
     const editBtn = screen.getAllByText("Edit")[0];
     fireEvent.click(editBtn);
@@ -62,7 +92,15 @@ describe("NotesList Component", () => {
 
   it("calls onDelete when Delete button is clicked", () => {
     const onDelete = vi.fn();
-    render(<NotesList notes={sampleNotes} onEdit={vi.fn()} onDelete={onDelete} onNew={vi.fn()} />);
+    render(
+      <NotesList
+        notes={sampleNotes}
+        onEdit={vi.fn()}
+        onDelete={onDelete}
+        onNew={vi.fn()}
+        setNotes={vi.fn()}
+      />
+    );
 
     const deleteBtn = screen.getAllByText("Delete")[0];
     fireEvent.click(deleteBtn);
