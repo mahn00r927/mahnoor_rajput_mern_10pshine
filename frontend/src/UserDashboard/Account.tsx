@@ -8,6 +8,9 @@ export default function AccountSettings() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(false);
   const [fetchingProfile, setFetchingProfile] = useState(true);
@@ -192,16 +195,11 @@ export default function AccountSettings() {
     // Or use navigate("/dashboard"); to go to dashboard directly
   };
 
-  const handleDeleteAccount = async () => {
-    const confirmDelete = globalThis.confirm(
-      'Are you sure you want to delete your account? This action cannot be undone.'
-    );
-
-    if (!confirmDelete) return;
-
-    const password = globalThis.prompt('Please enter your password to confirm:');
-
-    if (!password) return;
+  const handleDeleteAccount = async (password: string) => {
+    if (!password) {
+      setError('Please enter your password to confirm');
+      return;
+    }
 
     try {
       setLoading(true);
@@ -226,9 +224,8 @@ export default function AccountSettings() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        alert('Account deleted successfully');
-        localStorage.removeItem('token');
-        globalThis.location.href = '/login';
+        setShowDeleteConfirm(false);
+        setShowDeleteSuccess(true);
       } else {
         setError(data.message || 'Failed to delete account');
       }
@@ -253,42 +250,54 @@ export default function AccountSettings() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-8 px-4">
-      <button
-        onClick={handleBack}
-        className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors duration-200 mb-4 ml-6"
-      >
-        <ArrowLeft size={20} />
-        <span>Back</span>
-      </button>
-
-      <div className="max-w-3xl mx-auto mb-5">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-2.5 sm:p-3 rounded-2xl shadow-lg shadow-blue-500/30">
-            <svg
-              className="w-5 h-5 sm:w-6 sm:h-6 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-              />
-            </svg>
-          </div>
-          <span className="text-lg sm:text-3xl font-bold text-white tracking-tight whitespace-nowrap">
-            Smart Notes
-          </span>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-10 px-4 relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-40 -right-24 h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="absolute -bottom-40 -left-24 h-80 w-80 rounded-full bg-fuchsia-500/10 blur-3xl" />
       </div>
 
-      <div className="max-w-3xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Account Settings</h1>
-          <p className="text-slate-400">Manage your account preferences and security</p>
+      <div className="max-w-4xl mx-auto relative">
+        <button
+          onClick={handleBack}
+          className="flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2 text-slate-300 hover:text-white hover:border-slate-700 transition-colors duration-200 mb-6"
+        >
+          <ArrowLeft size={18} />
+          <span>Back</span>
+        </button>
+
+        <div className="mb-8 rounded-2xl border border-slate-800/80 bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-slate-950/90 shadow-2xl">
+          <div className="p-6 sm:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-br from-blue-500 to-cyan-500 p-3 rounded-2xl shadow-lg shadow-cyan-500/30">
+                <svg
+                  className="w-5 h-5 sm:w-6 sm:h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <span className="block text-lg sm:text-2xl font-semibold text-white tracking-tight">
+                  Smart Notes
+                </span>
+                <span className="block text-xs uppercase tracking-widest text-slate-400">
+                  Account Center
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-semibold text-white mb-1">Account Settings</h1>
+              <p className="text-slate-400">Manage your profile, security, and preferences</p>
+            </div>
+          </div>
         </div>
 
         {error && (
@@ -305,9 +314,9 @@ export default function AccountSettings() {
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
           <button
             onClick={() => setActiveTab('profile')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all whitespace-nowrap cursor-pointer ${activeTab === 'profile'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
-                : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-white'
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all whitespace-nowrap cursor-pointer border ${activeTab === 'profile'
+                ? 'bg-blue-600/90 text-white border-blue-500/60 shadow-lg shadow-blue-600/30'
+                : 'bg-slate-900/60 text-slate-300 border-slate-800 hover:bg-slate-800/70'
               }`}
           >
             <User size={18} />
@@ -315,9 +324,9 @@ export default function AccountSettings() {
           </button>
           <button
             onClick={() => setActiveTab('security')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all whitespace-nowrap cursor-pointer ${activeTab === 'security'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
-                : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-white'
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all whitespace-nowrap cursor-pointer border ${activeTab === 'security'
+                ? 'bg-blue-600/90 text-white border-blue-500/60 shadow-lg shadow-blue-600/30'
+                : 'bg-slate-900/60 text-slate-300 border-slate-800 hover:bg-slate-800/70'
               }`}
           >
             <Shield size={18} />
@@ -325,7 +334,7 @@ export default function AccountSettings() {
           </button>
         </div>
 
-        <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl border border-slate-700/50 shadow-2xl">
+        <div className="bg-slate-900/60 backdrop-blur-sm rounded-2xl border border-slate-800/80 shadow-2xl">
 
           {activeTab === 'profile' && (
             <div className="p-6 sm:p-8">
@@ -347,7 +356,7 @@ export default function AccountSettings() {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-900/50 border border-slate-600/50 rounded-lg px-12 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-full bg-slate-900/60 border border-slate-700/60 rounded-lg px-12 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                       placeholder="Enter your name"
                     />
                   </div>
@@ -365,7 +374,7 @@ export default function AccountSettings() {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-900/50 border border-slate-600/50 rounded-lg px-12 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-full bg-slate-900/60 border border-slate-700/60 rounded-lg px-12 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                       placeholder="Enter your email"
                     />
                   </div>
@@ -374,7 +383,7 @@ export default function AccountSettings() {
                 <button
                   onClick={handleSaveProfile}
                   disabled={loading}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {loading ? (
                     <>
@@ -394,7 +403,7 @@ export default function AccountSettings() {
 
           {activeTab === 'security' && (
             <div className="p-6 sm:p-8">
-              <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2 cursor-pointer">
+              <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
                 <Lock size={20} className="text-blue-500" />
                 Reset Password
               </h2>
@@ -412,7 +421,7 @@ export default function AccountSettings() {
                       name="currentPassword"
                       value={formData.currentPassword}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-900/50 border border-slate-600/50 rounded-lg px-12 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12"
+                      className="w-full bg-slate-900/60 border border-slate-700/60 rounded-lg px-12 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12"
                       placeholder="Enter current password"
                     />
                     <button
@@ -436,7 +445,7 @@ export default function AccountSettings() {
                       name="newPassword"
                       value={formData.newPassword}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-900/50 border border-slate-600/50 rounded-lg px-12 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12"
+                      className="w-full bg-slate-900/60 border border-slate-700/60 rounded-lg px-12 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12"
                       placeholder="Enter new password"
                     />
                     <button
@@ -463,7 +472,7 @@ export default function AccountSettings() {
                       name="confirmPassword"
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-900/50 border border-slate-600/50 rounded-lg px-12 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12"
+                      className="w-full bg-slate-900/60 border border-slate-700/60 rounded-lg px-12 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12"
                       placeholder="Confirm new password"
                     />
                     <button
@@ -478,7 +487,7 @@ export default function AccountSettings() {
                 <button
                   onClick={handleResetPassword}
                   disabled={loading}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {loading ? (
                     <>
@@ -494,12 +503,15 @@ export default function AccountSettings() {
                 </button>
 
                 <div className="pt-8 mt-8 border-t border-slate-700/50">
-                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2 cursor-pointer">
+                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                     <Settings size={18} className="text-red-500" />
                     Danger Zone
                   </h3>
                   <button
-                    onClick={handleDeleteAccount}
+                    onClick={() => {
+                      setDeletePassword('');
+                      setShowDeleteConfirm(true);
+                    }}
                     disabled={loading}
                     className="w-full bg-red-600/10 hover:bg-red-600/20 border border-red-600/30 text-red-400 font-semibold py-3 px-6 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
@@ -514,6 +526,76 @@ export default function AccountSettings() {
           )}
         </div>
       </div>
+
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md rounded-2xl border border-slate-800/80 bg-slate-900/90 shadow-2xl">
+            <div className="px-6 py-4 border-b border-slate-800/70">
+              <h3 className="text-lg font-semibold text-white">Confirm Account Deletion</h3>
+            </div>
+            <div className="px-6 py-4 space-y-4">
+              <p className="text-sm text-slate-300">
+                This action cannot be undone. Please enter your password to confirm.
+              </p>
+              <div>
+                <label htmlFor="deletePassword" className="block text-sm text-slate-400 mb-2">
+                  Password
+                </label>
+                <input
+                  id="deletePassword"
+                  type="password"
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  placeholder="Enter your password"
+                  className="w-full bg-slate-950/60 border border-slate-800 rounded-lg px-4 py-2 text-slate-200 placeholder-slate-500 outline-none focus:border-red-500/70 focus:ring-2 focus:ring-red-500/30"
+                />
+              </div>
+            </div>
+            <div className="px-6 py-4 border-t border-slate-800/70 flex justify-end gap-3">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="px-4 py-2 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDeleteAccount(deletePassword)}
+                disabled={loading}
+                className="px-4 py-2 rounded-lg bg-red-500/20 text-red-300 hover:bg-red-500/30 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Delete Account
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDeleteSuccess && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md rounded-2xl border border-slate-800/80 bg-slate-900/90 shadow-2xl">
+            <div className="px-6 py-4 border-b border-slate-800/70">
+              <h3 className="text-lg font-semibold text-white">Account Deleted</h3>
+            </div>
+            <div className="px-6 py-4">
+              <p className="text-sm text-slate-300">
+                Your account has been deleted successfully. You will be signed out now.
+              </p>
+            </div>
+            <div className="px-6 py-4 border-t border-slate-800/70 flex justify-end">
+              <button
+                onClick={() => {
+                  setShowDeleteSuccess(false);
+                  localStorage.removeItem('token');
+                  globalThis.location.href = '/login';
+                }}
+                className="px-4 py-2 rounded-lg bg-blue-600/90 text-white hover:bg-blue-500 transition cursor-pointer"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

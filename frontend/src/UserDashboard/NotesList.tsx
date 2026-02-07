@@ -97,11 +97,15 @@ export default function NotesList({
           <button
             key={note._id}
             onClick={() => onEdit(note)}
-            className="bg-gray-900 border border-gray-800 p-4 rounded cursor-pointer hover:border-gray-700 transition flex flex-col"
+            className="group relative overflow-hidden bg-gradient-to-br from-slate-900 via-gray-900 to-slate-950 border border-slate-800/80 p-4 rounded-xl cursor-pointer transition-all duration-300 flex flex-col hover:-translate-y-1 hover:border-slate-600/80 hover:shadow-xl hover:shadow-slate-900/50"
           >
+            <span className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span className="absolute -top-24 -right-20 h-48 w-48 rounded-full bg-cyan-500/10 blur-3xl" />
+              <span className="absolute -bottom-24 -left-20 h-48 w-48 rounded-full bg-fuchsia-500/10 blur-3xl" />
+            </span>
             {/* TITLE + PIN */}
             <div className="flex items-start justify-between mb-2">
-              <h3 className="font-semibold truncate text-lg sm:text-base">
+              <h3 className="font-semibold truncate text-lg sm:text-base text-slate-100 group-hover:text-white transition-colors">
                 {note.title || "Untitled"}
               </h3>
 
@@ -117,7 +121,7 @@ export default function NotesList({
                   className={
                     note.isPinned
                       ? "fill-yellow-400 text-yellow-400 cursor-pointer"
-                      : "text-gray-500 hover:text-yellow-400 cursor-pointer"
+                      : "text-slate-500 hover:text-yellow-400 cursor-pointer"
                   }
                 />
               </button>
@@ -125,7 +129,7 @@ export default function NotesList({
 
             {/* CONTENT */}
             <div
-              className="text-sm text-gray-400 line-clamp-3 flex-1 overflow-hidden"
+              className="text-sm text-slate-400 line-clamp-3 flex-1 overflow-hidden group-hover:text-slate-200 transition-colors"
               dangerouslySetInnerHTML={{
                 __html: note.content || "<p class='italic'>Empty note</p>",
               }}
@@ -138,7 +142,7 @@ export default function NotesList({
                   e.stopPropagation();
                   onEdit(note);
                 }}
-                className="flex items-center gap-1 text-green-400 text-xs hover:text-green-500"
+                className="flex items-center gap-1 text-emerald-400 text-xs hover:text-emerald-300 transition-colors"
               >
                 <Pencil size={14} />
                 Edit
@@ -149,7 +153,7 @@ export default function NotesList({
                   e.stopPropagation();
                   openConfirm(note._id);
                 }}
-                className="flex items-center gap-1 text-red-400 text-xs hover:text-red-500"
+                className="flex items-center gap-1 text-rose-400 text-xs hover:text-rose-300 transition-colors"
               >
                 <Trash2 size={14} />
                 Delete

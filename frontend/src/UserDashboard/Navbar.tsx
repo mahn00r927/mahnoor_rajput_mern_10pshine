@@ -22,7 +22,7 @@ export default function TopBar({
       {/* Mobile Menu */}
       <button
         onClick={onSidebarToggle}
-        className="md:hidden p-2 bg-gray-800 rounded"
+        className="md:hidden p-2 rounded-lg border border-slate-800 bg-slate-900/70 text-slate-300 hover:text-white hover:border-slate-700 transition cursor-pointer"
       >
         <Menu size={20} />
       </button>
@@ -34,7 +34,7 @@ export default function TopBar({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search notes..."
-          className="w-full pl-12 py-3 bg-slate-900 rounded-xl border border-slate-700"
+          className="w-full pl-12 pr-4 py-3 bg-slate-900/70 text-slate-200 placeholder-slate-500 rounded-xl border border-slate-800/80 focus:border-blue-500/70 focus:ring-2 focus:ring-blue-500/30 outline-none transition"
         />
       </div>
 

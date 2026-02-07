@@ -15,21 +15,24 @@ export const HeroSection: React.FC = () => {
         pb-24 sm:pb-32
       "
     >
+      {/* Light Theme Background Layer */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50 to-slate-100 dark:opacity-0" />
+
       {/* Decorative Background Elements */}
-      <div className="absolute top-1/4 left-4 sm:left-10 w-56 sm:w-72 h-56 sm:h-72 bg-blue-300/20 dark:bg-blue-500/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-1/4 right-4 sm:right-10 w-72 sm:w-96 h-72 sm:h-96 bg-indigo-400/15 dark:bg-cyan-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute top-1/4 left-4 sm:left-10 w-56 sm:w-72 h-56 sm:h-72 bg-blue-400/15 dark:bg-blue-500/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-1/4 right-4 sm:right-10 w-72 sm:w-96 h-72 sm:h-96 bg-cyan-400/12 dark:bg-cyan-500/5 rounded-full blur-3xl"></div>
 
       <div className="max-w-5xl mx-auto text-center relative z-10">
         
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full 
-          bg-blue-100/90 dark:bg-blue-500/10 
-          border border-blue-300/60 dark:border-blue-500/20 
+          bg-white/95 dark:bg-blue-500/10 
+          border border-slate-200/80 dark:border-blue-500/20 
           mb-6 sm:mb-8
-          shadow-sm dark:shadow-none
+          shadow-sm shadow-slate-200/80 dark:shadow-none
           transition-all duration-300">
           <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-          <span className="text-blue-700 dark:text-blue-300 text-xs sm:text-sm font-semibold transition-colors duration-300">
+          <span className="text-slate-700 dark:text-blue-300 text-xs sm:text-sm font-semibold transition-colors duration-300">
             Beautifully simple note-taking
           </span>
         </div>
@@ -37,13 +40,13 @@ export const HeroSection: React.FC = () => {
         {/* Main Heading */}
         <h1 className="font-bold mb-5 sm:mb-6">
           <span className="block text-4xl sm:text-6xl md:text-7xl lg:text-8xl 
-            text-blue-900 dark:text-white 
+            text-slate-950 dark:text-white 
             mb-2 transition-colors duration-300
             tracking-tight">
             Where your
           </span>
           <span className="block text-4xl sm:text-6xl md:text-7xl lg:text-8xl 
-            bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500
+            bg-gradient-to-r from-blue-700 via-blue-600 to-cyan-600
             dark:from-blue-400 dark:via-blue-500 dark:to-cyan-400 
             text-transparent bg-clip-text
             tracking-tight">
@@ -52,7 +55,7 @@ export const HeroSection: React.FC = () => {
         </h1>
 
         {/* Subheading */}
-        <p className="text-gray-700 dark:text-gray-400 
+        <p className="text-slate-700 dark:text-gray-400 
           text-base sm:text-lg md:text-xl 
           max-w-3xl mx-auto mb-8 sm:mb-12 
           leading-relaxed transition-colors duration-300
@@ -66,8 +69,8 @@ export const HeroSection: React.FC = () => {
           onClick={() => nav("/login")}
           className="
             group inline-flex items-center gap-3
-            bg-gradient-to-r from-blue-500 to-blue-600
-            hover:from-blue-600 hover:to-blue-700
+            bg-gradient-to-r from-blue-600 to-cyan-500
+            hover:from-blue-700 hover:to-cyan-600
             text-white font-semibold
             px-6 py-3 sm:px-8 sm:py-4
             rounded-full

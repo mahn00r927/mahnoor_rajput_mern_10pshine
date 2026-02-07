@@ -5,6 +5,8 @@ export const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showNotice, setShowNotice] = useState<boolean>(false);
+  const [noticeMessage, setNoticeMessage] = useState<string>('');
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -16,8 +18,8 @@ export const ForgotPassword: React.FC = () => {
       });
 
       const data = await res.json();
-      alert(data.message);
-      setIsSubmitted(true);
+      setNoticeMessage(data.message || 'Reset email sent successfully.');
+      setShowNotice(true);
     } catch (err) {
       console.error(err);
       alert("Something went wrong");
@@ -39,11 +41,15 @@ export const ForgotPassword: React.FC = () => {
   // ✅ Submitted state
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16">
-        <div className="w-full max-w-md bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl shadow-blue-500/20">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16 relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -top-40 -right-32 h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl" />
+          <div className="absolute -bottom-40 -left-32 h-80 w-80 rounded-full bg-fuchsia-500/10 blur-3xl" />
+        </div>
+        <div className="w-full max-w-md bg-slate-900/80 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl border border-slate-800/80 relative">
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-6">
-              <CheckCircle className="w-8 h-8 text-green-400" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-500/15 rounded-2xl mb-6 border border-emerald-400/30">
+              <CheckCircle className="w-8 h-8 text-emerald-400" />
             </div>
 
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-3">
@@ -57,7 +63,7 @@ export const ForgotPassword: React.FC = () => {
 
             <button
               onClick={handleBackToLogin}
-              className="w-full bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 sm:py-4 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30 mb-4"
+              className="w-full bg-linear-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold py-3 sm:py-4 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-cyan-500/30 mb-4 cursor-pointer"
             >
               Back to Sign in
             </button>
@@ -66,7 +72,7 @@ export const ForgotPassword: React.FC = () => {
               Didn't receive the email?{' '}
               <button
                 onClick={handleSubmit}
-                className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                className="text-cyan-300 hover:text-cyan-200 font-medium transition-colors cursor-pointer"
               >
                 Resend
               </button>
@@ -79,15 +85,19 @@ export const ForgotPassword: React.FC = () => {
 
   // ✅ Default form state
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16">
-      <div className="w-full max-w-md bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl shadow-blue-500/20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16 relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-40 -right-32 h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="absolute -bottom-40 -left-32 h-80 w-80 rounded-full bg-fuchsia-500/10 blur-3xl" />
+      </div>
+      <div className="w-full max-w-md bg-slate-900/80 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl border border-slate-800/80 relative">
         {/* Back Button */}
         <button
           onClick={handleBackToLogin}
-          className="flex items-center text-slate-400 hover:text-white transition-colors mb-6 group"
+          className="inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2 text-slate-300 hover:text-white hover:border-slate-700 transition-colors mb-6 group cursor-pointer"
         >
-          <ArrowLeft className="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" />
-          <span className="font-medium text-sm sm:text-base">Back</span>
+          <ArrowLeft className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" />
+          <span className="font-medium text-sm">Back</span>
         </button>
 
         {/* Header */}
@@ -112,14 +122,14 @@ export const ForgotPassword: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="w-full bg-slate-900/50 border border-slate-700 text-white placeholder-slate-400 rounded-2xl py-3 sm:py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+              className="w-full bg-slate-950/60 border border-slate-800 text-white placeholder-slate-500 rounded-2xl py-3 sm:py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-300"
             />
           </div>
 
           <button
             onClick={handleSubmit}
             disabled={isLoading || !email}
-            className="w-full bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:bg-slate-600 disabled:cursor-not-allowed text-white font-semibold py-3 sm:py-4 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30 disabled:shadow-none mb-4"
+            className="w-full bg-linear-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-semibold py-3 sm:py-4 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-cyan-500/30 disabled:shadow-none mb-4 cursor-pointer"
           >
             {isLoading ? (
               <span className="flex items-center justify-center">
@@ -135,6 +145,30 @@ export const ForgotPassword: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {showNotice && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="w-full max-w-md rounded-2xl border border-slate-800/80 bg-slate-900/90 shadow-2xl">
+            <div className="px-6 py-4 border-b border-slate-800/70">
+              <h3 className="text-lg font-semibold text-white">Email Sent</h3>
+            </div>
+            <div className="px-6 py-4">
+              <p className="text-sm text-slate-300">{noticeMessage}</p>
+            </div>
+            <div className="px-6 py-4 border-t border-slate-800/70 flex justify-end">
+              <button
+                onClick={() => {
+                  setShowNotice(false);
+                  setIsSubmitted(true);
+                }}
+                className="px-4 py-2 rounded-lg bg-cyan-500/20 text-cyan-200 hover:bg-cyan-500/30 transition cursor-pointer"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

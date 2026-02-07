@@ -180,7 +180,7 @@ export function Login() {
                 className="text-blue-400 hover:text-blue-300 font-medium transition-colors cursor-pointer"
                 onClick={() => nav("/signup")}
               >
-                Sign up
+                Register Here
               </button>
             </p>
           </div>

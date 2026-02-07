@@ -24,9 +24,9 @@ export const CTASection: React.FC = () => {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-blue-100 blur-[60px] opacity-60 dark:hidden pointer-events-none"></div>
 
           {/* Heading */}
-          <h2 className="relative z-10 text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight transition-colors duration-300">
-            Ready to organize your thoughts?
-          </h2>
+          <h3 className="relative z-10 text-2xl sm:text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight transition-colors duration-300 line-height-2">
+            Ready to Start?
+          </h3>
 
           {/* Description */}
           <p className="relative z-10 text-lg sm:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-10 sm:mb-12 transition-colors duration-300 leading-relaxed">
