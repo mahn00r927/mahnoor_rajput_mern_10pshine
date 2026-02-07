@@ -1,70 +1,57 @@
 import React from 'react';
+import "../App.css"
 import { useNavigate } from 'react-router-dom';
-
 export const CTASection: React.FC = () => {
   const nav = useNavigate();
 
   return (
-    <section className="flex items-center justify-center px-4 sm:px-6 py-16 sm:py-20">
-      <div className="max-w-4xl mx-auto w-full">
+    <section className="flex items-center justify-center px-4 sm:px-6 py-20 sm:py-24">
+      <div className="max-w-3xl mx-auto w-full text-center">
 
-        {/* CTA Card */}
+        {/* CTA Card - Reference Style (Clean White with Soft Shadow) */}
         <div className="
-          bg-linear-to-br from-gray-900/80 to-gray-800/60
+          relative 
+          bg-white dark:bg-gray-900/60
           backdrop-blur-xl
-          rounded-2xl sm:rounded-3xl
-          border border-blue-500/10
-          p-6 sm:p-10 md:p-14
-          text-center
-          shadow-2xl shadow-blue-500/5
+          rounded-[2.5rem] sm:rounded-[3rem]
+          border border-gray-100 dark:border-white/10
+          shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] dark:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)]
+          p-10 sm:p-14 md:p-16
+          transition-all duration-300
         ">
 
-          {/* Icon */}
-          <div className="inline-flex items-center justify-center mb-6 sm:mb-8">
-            <svg
-              className="w-10 h-10 sm:w-14 sm:h-14 text-blue-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-              />
-            </svg>
-          </div>
+          {/* Optional Subtle Blue Glow inside card (Very faint) */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-blue-100 blur-[60px] opacity-60 dark:hidden pointer-events-none"></div>
 
           {/* Heading */}
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
-            Ready to start?
+          <h2 className="relative z-10 text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight transition-colors duration-300">
+            Ready to organize your thoughts?
           </h2>
 
           {/* Description */}
-          <p className="text-gray-400 text-base sm:text-lg md:text-xl mb-2 max-w-2xl mx-auto">
-            Join thousands who've found their perfect writing space.
-          </p>
-          <p className="text-gray-400 text-base sm:text-lg md:text-xl mb-8 sm:mb-10">
-            Free to start, no credit card required.
+          <p className="relative z-10 text-lg sm:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-10 sm:mb-12 transition-colors duration-300 leading-relaxed">
+            Join thousands of happy users who have transformed how they capture and organize ideas.
           </p>
 
           {/* CTA Button */}
           <button
             onClick={() => nav('/signup')}
             className="
-              bg-linear-to-r from-blue-500 to-blue-600
-              hover:from-blue-600 hover:to-blue-700
+              relative z-10
+              bg-gradient-to-r from-blue-600 to-blue-500
+              hover:from-blue-700 hover:to-blue-600
               text-white font-semibold
-              px-6 py-3 sm:px-8 sm:py-4
+              px-8 py-4 sm:px-10 sm:py-5
               rounded-full
               text-base sm:text-lg
-              transition-all duration-300
-              hover:scale-105
+              shadow-xl shadow-blue-500/30
               hover:shadow-2xl hover:shadow-blue-500/50
+              hover:-translate-y-1
+              transition-all duration-300
+              cursor-pointer
             "
           >
-            Create Free Account
+            Get Started 
           </button>
 
         </div>

@@ -33,19 +33,16 @@ exports.createNote = asyncHandler(async (req, res) => {
 });
 
 
+
 // GET ALL NOTES (user specific)
 exports.getNotes = asyncHandler(async (req, res) => {
-  const notes = await Note.find({ user: req.user.id }).sort({ isPinned: -1, updatedAt: -1 });
+  const notes = await Note.find({ user: req.user.id })
+    .sort({ isPinned: -1, updatedAt: -1 });
 
+  // ✅ EMPTY ARRAY IS SUCCESS
+  logger.info(`Fetched ${notes.length} notes for user ${req.user.id}`);
 
-  if (!notes.length) {
-    const error = new Error("No notes found");
-    error.statusCode = 404;
-    throw error;
-  }
-
-  logger.info("Fetched user notes");
-  res.json(notes);
+  res.status(200).json(notes);
 });
 
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { User, Mail, Lock, Eye, EyeOff, Save, Settings, Shield, Loader2, ArrowLeft } from 'lucide-react';
+import { User, Mail, Lock, Save, Settings, Shield, Loader2, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const API_URL = 'http://localhost:5000/api/users';
@@ -305,7 +305,7 @@ export default function AccountSettings() {
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
           <button
             onClick={() => setActiveTab('profile')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all whitespace-nowrap ${activeTab === 'profile'
+            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all whitespace-nowrap cursor-pointer ${activeTab === 'profile'
                 ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
                 : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-white'
               }`}
@@ -315,7 +315,7 @@ export default function AccountSettings() {
           </button>
           <button
             onClick={() => setActiveTab('security')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all whitespace-nowrap ${activeTab === 'security'
+            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all whitespace-nowrap cursor-pointer ${activeTab === 'security'
                 ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
                 : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-white'
               }`}
@@ -374,7 +374,7 @@ export default function AccountSettings() {
                 <button
                   onClick={handleSaveProfile}
                   disabled={loading}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {loading ? (
                     <>
@@ -394,7 +394,7 @@ export default function AccountSettings() {
 
           {activeTab === 'security' && (
             <div className="p-6 sm:p-8">
-              <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+              <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2 cursor-pointer">
                 <Lock size={20} className="text-blue-500" />
                 Reset Password
               </h2>
@@ -420,7 +420,6 @@ export default function AccountSettings() {
                       onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
                     >
-                      {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                 </div>
@@ -445,7 +444,6 @@ export default function AccountSettings() {
                       onClick={() => setShowNewPassword(!showNewPassword)}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
                     >
-                      {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                   <p className="text-xs text-slate-400 mt-2">
@@ -473,7 +471,6 @@ export default function AccountSettings() {
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
                     >
-                      {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                 </div>
@@ -481,7 +478,7 @@ export default function AccountSettings() {
                 <button
                   onClick={handleResetPassword}
                   disabled={loading}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {loading ? (
                     <>
@@ -497,14 +494,14 @@ export default function AccountSettings() {
                 </button>
 
                 <div className="pt-8 mt-8 border-t border-slate-700/50">
-                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2 cursor-pointer">
                     <Settings size={18} className="text-red-500" />
                     Danger Zone
                   </h3>
                   <button
                     onClick={handleDeleteAccount}
                     disabled={loading}
-                    className="w-full bg-red-600/10 hover:bg-red-600/20 border border-red-600/30 text-red-400 font-semibold py-3 px-6 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-red-600/10 hover:bg-red-600/20 border border-red-600/30 text-red-400 font-semibold py-3 px-6 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
                     Delete Account
                   </button>

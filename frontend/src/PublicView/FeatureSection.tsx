@@ -1,5 +1,5 @@
 import React from 'react';
-
+import "../App.css"
 export const FeaturesSection: React.FC = () => {
   const features = [
     {
@@ -13,8 +13,12 @@ export const FeaturesSection: React.FC = () => {
           />
         </svg>
       ),
-      title: 'Distraction-free',
-      description: 'A clean canvas for your thoughts. No clutter, just clarity.',
+      title: 'Rich Note Editor',
+      description: 'Write beautiful notes with our powerful intuitive editor. Format text, add code snippets, and more.',
+      // Custom Colors for this feature
+      gradient: 'from-blue-500 to-blue-600',
+      shadow: 'shadow-blue-500/20',
+      hoverShadow: 'shadow-blue-500/30'
     },
     {
       icon: (
@@ -31,6 +35,10 @@ export const FeaturesSection: React.FC = () => {
       ),
       title: 'Organized',
       description: 'Folders that work together seamlessly.',
+      // Custom Colors for this feature (Purple)
+      gradient: 'from-violet-300 to-purple-600',
+      shadow: 'shadow-violet-500/20',
+      hoverShadow: 'shadow-violet-500/30'
     },
     {
       icon: (
@@ -44,43 +52,60 @@ export const FeaturesSection: React.FC = () => {
         </svg>
       ),
       title: 'Private',
-      description: 'Your notes belongs only to you.',
+      description: 'Your notes are belong only to you.',
+      // Custom Colors for this feature (Teal/Green)
+      gradient: 'from-teal-500 to-emerald-600',
+      shadow: 'shadow-emerald-500/20',
+      hoverShadow: 'shadow-emerald-500/30'
     },
   ];
 
   return (
-    <section className="flex items-center justify-center px-4 sm:px-6 py-16 sm:py-20">
-      <div className="max-w-6xl mx-auto">
+    <section className="flex items-center justify-center px-4 sm:px-6 py-16 sm:py-24 relative z-10">
+      <div className="max-w-6xl mx-auto w-full">
 
         {/* Section Header */}
-        <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6">
-            Designed for focus
+        <div className="text-center mb-12 sm:mb-20">
+          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight transition-colors duration-300">
+            Everything you need
           </h2>
-          <p className="text-gray-400 text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
-            Every feature crafted to help you think clearly and work efficiently.
+          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-light transition-colors duration-300">
+            Powerful features to organize your life, wrapped in a simple interface.
           </p>
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {features.map((feature, index) => (
-            <div key={index} className="group text-center">
-
-              {/* Icon */}
-              <div className="inline-flex items-center justify-center mb-5 sm:mb-6">
-                <div className="bg-linear-to-br from-blue-500/20 to-blue-600/20 p-4 sm:p-6 rounded-3xl border border-blue-500/20 transition-all duration-300 group-hover:border-blue-500/40 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-blue-500/20">
+            <div 
+              key={index} 
+              className="group relative 
+                bg-white/60 dark:bg-white/5
+                border border-gray-100 dark:border-white/10
+                rounded-3xl p-8 sm:p-10
+                shadow-lg shadow-gray-200/50 dark:shadow-none
+                hover:shadow-xl hover:-translate-y-1
+                transition-all duration-300
+                text-center"
+            >
+              {/* Icon Container - Colors applied dynamically here */}
+              <div className="inline-flex items-center justify-center mb-6">
+                <div className={`
+                  bg-gradient-to-br ${feature.gradient}
+                  p-4 rounded-2xl
+                  shadow-lg ${feature.shadow}
+                  group-hover:scale-110 group-hover:${feature.hoverShadow}
+                  transition-all duration-300
+                `}>
                   {feature.icon}
                 </div>
               </div>
 
-              {/* Title */}
-              <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">
+              {/* Content */}
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3 transition-colors duration-300">
                 {feature.title}
               </h3>
-
-              {/* Description */}
-              <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-sm mx-auto">
+              <p className="text-gray-600 dark:text-gray-400 text-base leading-relaxed transition-colors duration-300">
                 {feature.description}
               </p>
 

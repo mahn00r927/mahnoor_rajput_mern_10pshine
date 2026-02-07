@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, EyeOff, Mail, Lock, ArrowLeft, User } from "lucide-react";
+import {Mail, Lock, ArrowLeft, User, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export function Signup() {
@@ -7,6 +7,7 @@ export function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [modal, setModal] = useState<{ show: boolean; title: string; message: string; type: 'error' | 'success' }>({ show: false, title: '', message: '', type: 'error' });
   const nav = useNavigate();
 
   // Frontend password validation
@@ -15,14 +16,24 @@ export function Signup() {
     return regex.test(pwd);
   };
 
+  const showModal = (title: string, message: string, type: 'error' | 'success' = 'error') => {
+    setModal({ show: true, title, message, type });
+  };
+
+  const closeModal = () => {
+    setModal({ ...modal, show: false });
+  };
+
   const handleSignup = async () => {
     if (!name || !email || !password) {
-      return alert("All fields are required");
+      return showModal("Validation Error", "All fields are required", "error");
     }
 
     if (!isStrongPassword(password)) {
-      return alert(
-        "Password must be at least 8 characters long, include uppercase, lowercase, number, and special character"
+      return showModal(
+        "Weak Password",
+        "Password must be at least 8 characters long, include uppercase, lowercase, number, and special character",
+        "error"
       );
     }
 
@@ -37,14 +48,14 @@ export function Signup() {
       console.log("SIGNUP RESPONSE", data);
 
       if (response.ok) {
-        alert("Account created successfully!");
-        nav("/login");
+        showModal("Success", "Account created successfully!", "success");
+        setTimeout(() => nav("/dashboard"), 1500);
       } else {
-        alert(data.message || "Signup failed");
+        showModal("Signup Failed", data.message || "Signup failed", "error");
       }
     } catch (err) {
       console.error("Error signing up:", err);
-      alert("Something went wrong. Please try again.");
+      showModal("Error", "Something went wrong. Please try again.", "error");
     }
   };
 
@@ -143,7 +154,6 @@ export function Signup() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 transition-colors"
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
               <p className="text-slate-500 text-xs mt-1 sm:mt-2">
@@ -154,7 +164,7 @@ export function Signup() {
             {/* Submit Button */}
             <button
               onClick={handleSignup}
-              className="w-full bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-2.5 sm:py-3 rounded-lg transition-all duration-200 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-2.5 sm:py-3 rounded-lg transition-all duration-200 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
             >
               Create Account
             </button>
@@ -166,7 +176,7 @@ export function Signup() {
               Already have an account?{" "}
               <button
                 type="button"
-                className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                className="text-blue-400 hover:text-blue-300 font-medium transition-colors cursor-pointer"
                 onClick={() => nav("/login")}
               >
                 Sign in
@@ -175,6 +185,49 @@ export function Signup() {
           </div>
         </div>
       </div>
+
+      {/* Modal Popup */}
+      {modal.show && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 rounded-2xl shadow-2xl max-w-md w-full">
+            {/* Modal Header */}
+            <div className={`px-6 py-4 border-b border-slate-700/50 flex items-center justify-between ${
+              modal.type === 'success' ? 'bg-blue-500/10' : 'bg-red-500/10'
+            }`}>
+              <h3 className={`text-lg font-semibold ${
+                modal.type === 'success' ? 'text-blue-400' : 'text-red-400'
+              }`}>
+                {modal.title}
+              </h3>
+              <button
+                onClick={closeModal}
+                className="text-slate-400 hover:text-white transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="px-6 py-4">
+              <p className="text-slate-300 text-sm leading-relaxed">{modal.message}</p>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 border-t border-slate-700/50 flex justify-end">
+              <button
+                onClick={closeModal}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  modal.type === 'success'
+                    ? 'bg-blue-500/20 text-blue-400 hover:bg-blue-500/30'
+                    : 'bg-blue-500/20 text-blue-400 hover:bg-blue-500/30'
+                }`}
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
 
   );
