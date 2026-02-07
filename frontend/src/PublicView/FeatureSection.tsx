@@ -30,7 +30,7 @@ export const FeaturesSection: React.FC = () => {
         </svg>
       ),
       title: 'Organized',
-      description: 'Folders and tags that work together seamlessly.',
+      description: 'Folders that work together seamlessly.',
     },
     {
       icon: (
@@ -44,7 +44,7 @@ export const FeaturesSection: React.FC = () => {
         </svg>
       ),
       title: 'Private',
-      description: 'Your notes are encrypted and belong only to you.',
+      description: 'Your notes belongs only to you.',
     },
   ];
 

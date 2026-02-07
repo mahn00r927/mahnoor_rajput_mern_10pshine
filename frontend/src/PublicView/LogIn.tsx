@@ -54,7 +54,7 @@ export function Login() {
   };
 
   const handleGoBack = () => {
-  nav('http://localhost:5173/')
+  nav('/')
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
