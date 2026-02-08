@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import "../App.css"
 export const FeaturesSection: React.FC = () => {
+  const revealRef = useRef<HTMLDivElement | null>(null);
+  const [inView, setInView] = useState(false);
   const features = [
     {
       icon: (
@@ -60,12 +62,30 @@ export const FeaturesSection: React.FC = () => {
     },
   ];
 
+  useEffect(() => {
+    if (!revealRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.25 }
+    );
+    observer.observe(revealRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section className="flex items-center justify-center px-4 sm:px-6 py-16 sm:py-24 relative z-10">
-      <div className="max-w-6xl mx-auto w-full">
+      <div
+        ref={revealRef}
+        className={`max-w-6xl mx-auto w-full reveal reveal-delay-sm ${inView ? "in-view" : ""}`}
+      >
 
         {/* Section Header */}
-        <div className="text-center mb-12 sm:mb-20">
+        <div className="text-center mb-12 sm:mb-20 reveal-item reveal-delay-sm">
           <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight transition-colors duration-300">
             Everything you need
           </h2>
@@ -75,7 +95,7 @@ export const FeaturesSection: React.FC = () => {
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 reveal-item reveal-delay-md">
           {features.map((feature, index) => (
             <div 
               key={index} 
@@ -84,8 +104,8 @@ export const FeaturesSection: React.FC = () => {
                 border border-gray-100 dark:border-white/10
                 rounded-3xl p-8 sm:p-10
                 shadow-lg shadow-gray-200/50 dark:shadow-none
-                hover:shadow-xl hover:-translate-y-1
-                transition-all duration-300
+                hover:shadow-xl hover:-translate-y-2
+                transition-all duration-500
                 text-center"
             >
               {/* Icon Container - Colors applied dynamically here */}

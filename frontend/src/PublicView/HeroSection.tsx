@@ -1,12 +1,30 @@
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../App.css"
 export const HeroSection: React.FC = () => {
   const nav = useNavigate();
+  const revealRef = useRef<HTMLDivElement | null>(null);
+  const [inView, setInView] = useState(false);
 
   const handleStartWriting = () => {
     const token = localStorage.getItem("token");
     nav(token ? "/dashboard" : "/login");
   };
+
+  useEffect(() => {
+    if (!revealRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(revealRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section
@@ -24,13 +42,16 @@ export const HeroSection: React.FC = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50 to-slate-100 dark:opacity-0" />
 
       {/* Decorative Background Elements */}
-      <div className="absolute top-1/4 left-4 sm:left-10 w-56 sm:w-72 h-56 sm:h-72 bg-blue-400/15 dark:bg-blue-500/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-1/4 right-4 sm:right-10 w-72 sm:w-96 h-72 sm:h-96 bg-cyan-400/12 dark:bg-cyan-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute top-1/4 left-4 sm:left-10 w-56 sm:w-72 h-56 sm:h-72 bg-blue-400/15 dark:bg-blue-500/10 rounded-full blur-3xl float-slow"></div>
+      <div className="absolute bottom-1/4 right-4 sm:right-10 w-72 sm:w-96 h-72 sm:h-96 bg-cyan-400/12 dark:bg-cyan-500/5 rounded-full blur-3xl float-slow"></div>
 
-      <div className="max-w-5xl mx-auto text-center relative z-10">
+      <div
+        ref={revealRef}
+        className={`max-w-5xl mx-auto text-center relative z-10 reveal ${inView ? "in-view" : ""}`}
+      >
         
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full 
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full reveal-item reveal-delay-sm
           bg-white/95 dark:bg-blue-500/10 
           border border-slate-200/80 dark:border-blue-500/20 
           mb-6 sm:mb-8
@@ -43,7 +64,7 @@ export const HeroSection: React.FC = () => {
         </div>
 
         {/* Main Heading */}
-        <h1 className="font-bold mb-5 sm:mb-6">
+        <h1 className="font-bold mb-5 sm:mb-6 reveal-item reveal-delay-md">
           <span className="block text-4xl sm:text-6xl md:text-7xl lg:text-8xl 
             text-slate-950 dark:text-white 
             mb-2 transition-colors duration-300
@@ -60,7 +81,7 @@ export const HeroSection: React.FC = () => {
         </h1>
 
         {/* Subheading */}
-        <p className="text-slate-700 dark:text-gray-400 
+        <p className="text-slate-700 dark:text-gray-400 reveal-item reveal-delay-lg 
           text-base sm:text-lg md:text-xl 
           max-w-3xl mx-auto mb-8 sm:mb-12 
           leading-relaxed transition-colors duration-300
@@ -85,6 +106,7 @@ export const HeroSection: React.FC = () => {
             shadow-lg shadow-blue-400/40
             hover:shadow-xl hover:shadow-blue-500/50
             cursor-pointer
+            reveal-item reveal-delay-lg
           "
         >
           Start Writing

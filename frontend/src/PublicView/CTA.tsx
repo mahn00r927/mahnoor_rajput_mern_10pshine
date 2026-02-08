@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import "../App.css"
 import { useNavigate } from 'react-router-dom';
 import { X } from 'lucide-react';
 export const CTASection: React.FC = () => {
   const nav = useNavigate();
   const [showRegisteredModal, setShowRegisteredModal] = useState(false);
+  const revealRef = useRef<HTMLDivElement | null>(null);
+  const [inView, setInView] = useState(false);
 
   const handleGetStarted = () => {
     const token = localStorage.getItem('token');
@@ -15,12 +17,29 @@ export const CTASection: React.FC = () => {
     nav('/signup');
   };
 
+  useEffect(() => {
+    if (!revealRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(revealRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section className="flex items-center justify-center px-4 sm:px-6 py-20 sm:py-24">
       <div className="max-w-3xl mx-auto w-full text-center">
 
         {/* CTA Card - Reference Style (Clean White with Soft Shadow) */}
-        <div className="
+        <div
+          ref={revealRef}
+          className={`
           relative 
           bg-white dark:bg-gray-900/60
           backdrop-blur-xl
@@ -29,10 +48,12 @@ export const CTASection: React.FC = () => {
           shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] dark:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)]
           p-10 sm:p-14 md:p-16
           transition-all duration-300
-        ">
+          reveal reveal-delay-sm ${inView ? "in-view" : ""}
+        `}
+        >
 
           {/* Optional Subtle Blue Glow inside card (Very faint) */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-blue-100 blur-[60px] opacity-60 dark:hidden pointer-events-none"></div>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-blue-100 blur-[60px] opacity-60 dark:hidden pointer-events-none glow-pulse"></div>
 
           {/* Heading */}
           <h3 className="relative z-10 text-2xl sm:text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight transition-colors duration-300 line-height-2">
