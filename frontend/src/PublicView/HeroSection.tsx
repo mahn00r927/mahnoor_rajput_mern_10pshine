@@ -3,6 +3,11 @@ import "../App.css"
 export const HeroSection: React.FC = () => {
   const nav = useNavigate();
 
+  const handleStartWriting = () => {
+    const token = localStorage.getItem("token");
+    nav(token ? "/dashboard" : "/login");
+  };
+
   return (
     <section
       aria-label="Hero section"
@@ -66,7 +71,7 @@ export const HeroSection: React.FC = () => {
 
         {/* CTA Button */}
         <button
-          onClick={() => nav("/login")}
+          onClick={handleStartWriting}
           className="
             group inline-flex items-center gap-3
             bg-gradient-to-r from-blue-600 to-cyan-500

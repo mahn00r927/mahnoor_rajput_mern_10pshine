@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "../App.css"
 import { useNavigate } from 'react-router-dom';
+import { X } from 'lucide-react';
 export const CTASection: React.FC = () => {
   const nav = useNavigate();
+  const [showRegisteredModal, setShowRegisteredModal] = useState(false);
+
+  const handleGetStarted = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setShowRegisteredModal(true);
+      return;
+    }
+    nav('/signup');
+  };
 
   return (
     <section className="flex items-center justify-center px-4 sm:px-6 py-20 sm:py-24">
@@ -35,7 +46,7 @@ export const CTASection: React.FC = () => {
 
           {/* CTA Button */}
           <button
-            onClick={() => nav('/signup')}
+            onClick={handleGetStarted}
             className="
               relative z-10
               bg-gradient-to-r from-blue-600 to-blue-500
@@ -56,6 +67,42 @@ export const CTASection: React.FC = () => {
 
         </div>
       </div>
+
+      {showRegisteredModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 rounded-2xl shadow-2xl max-w-md w-full">
+            <div className="px-6 py-4 border-b border-slate-700/50 flex items-center justify-between bg-blue-500/10">
+              <h3 className="text-lg font-semibold text-blue-400">Already Registered</h3>
+              <button
+                onClick={() => setShowRegisteredModal(false)}
+                className="text-slate-400 hover:text-white transition-colors"
+                aria-label="Close dialog"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="px-6 py-4">
+              <p className="text-slate-300 text-sm leading-relaxed">
+                You are already registered. Go to your dashboard to continue.
+              </p>
+            </div>
+            <div className="px-6 py-4 border-t border-slate-700/50 flex justify-end gap-3">
+              <button
+                onClick={() => setShowRegisteredModal(false)}
+                className="px-4 py-2 rounded-lg font-medium bg-slate-700/50 text-slate-200 hover:bg-slate-700 transition"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => nav('/dashboard')}
+                className="px-4 py-2 rounded-lg font-medium bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition"
+              >
+                Go to Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

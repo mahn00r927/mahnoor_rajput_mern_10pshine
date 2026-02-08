@@ -42,7 +42,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ name, onLogout }) => {
             console.log("Button activated with keyboard");
           }
         }}
-        className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center font-semibold cursor-pointer hover:bg-blue-700 transition-all duration-200"
+        className="w-12 h-12 text-lg rounded-full bg-blue-600 flex items-center justify-center font-semibold cursor-pointer hover:bg-blue-700 transition-all duration-200"
       >
         {initial}
       </button>

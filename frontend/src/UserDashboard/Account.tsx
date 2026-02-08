@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { User, Mail, Lock, Save, Settings, Shield, Loader2, ArrowLeft } from 'lucide-react';
+import { User, Mail, Lock, Save, Settings, Shield, Loader2, ArrowLeft, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const API_URL = 'http://localhost:5000/api/users';
@@ -16,6 +16,7 @@ export default function AccountSettings() {
   const [fetchingProfile, setFetchingProfile] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [modal, setModal] = useState<{ show: boolean; title: string; message: string; type: 'error' | 'success' }>({ show: false, title: '', message: '', type: 'error' });
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -81,6 +82,14 @@ export default function AccountSettings() {
     setSuccess('');
   };
 
+  const showModal = (title: string, message: string, type: 'error' | 'success' = 'error') => {
+    setModal({ show: true, title, message, type });
+  };
+
+  const closeModal = () => {
+    setModal({ ...modal, show: false });
+  };
+
   const handleSaveProfile = async () => {
     try {
       setLoading(true);
@@ -91,6 +100,7 @@ export default function AccountSettings() {
 
       if (!token) {
         setError('Please login to continue');
+        showModal('Login Required', 'Please login to continue', 'error');
         return;
       }
 
@@ -110,16 +120,20 @@ export default function AccountSettings() {
 
       if (response.ok && data.success) {
         setSuccess('Profile updated successfully!');
+        showModal('Profile Updated', 'Your profile was updated successfully.', 'success');
         setFormData(prev => ({
           ...prev,
           name: data.user.name,
           email: data.user.email,
         }));
       } else {
-        setError(data.message || 'Failed to update profile');
+        const message = data.message || 'Failed to update profile';
+        setError(message);
+        showModal('Update Failed', message, 'error');
       }
     } catch (err) {
       setError('Failed to update profile');
+      showModal('Update Failed', 'Failed to update profile', 'error');
       console.error('Error updating profile:', err);
     } finally {
       setLoading(false);
@@ -134,18 +148,21 @@ export default function AccountSettings() {
 
       if (!formData.currentPassword || !formData.newPassword || !formData.confirmPassword) {
         setError('Please fill in all password fields');
+        showModal('Missing Fields', 'Please fill in all password fields', 'error');
         setLoading(false);
         return;
       }
 
       if (formData.newPassword !== formData.confirmPassword) {
         setError('New passwords do not match');
+        showModal('Password Mismatch', 'New passwords do not match', 'error');
         setLoading(false);
         return;
       }
 
       if (formData.newPassword.length < 8) {
         setError('Password must be at least 8 characters long');
+        showModal('Weak Password', 'Password must be at least 8 characters long', 'error');
         setLoading(false);
         return;
       }
@@ -154,6 +171,7 @@ export default function AccountSettings() {
 
       if (!token) {
         setError('Please login to continue');
+        showModal('Login Required', 'Please login to continue', 'error');
         return;
       }
 
@@ -174,6 +192,7 @@ export default function AccountSettings() {
 
       if (response.ok && data.success) {
         setSuccess('Password updated successfully!');
+        showModal('Password Updated', 'Your password was updated successfully.', 'success');
         setFormData(prev => ({
           ...prev,
           currentPassword: '',
@@ -181,10 +200,13 @@ export default function AccountSettings() {
           confirmPassword: '',
         }));
       } else {
-        setError(data.message || 'Failed to update password');
+        const message = data.message || 'Failed to update password';
+        setError(message);
+        showModal('Update Failed', message, 'error');
       }
     } catch (err) {
       setError('Failed to update password');
+      showModal('Update Failed', 'Failed to update password', 'error');
       console.error('Error updating password:', err);
     } finally {
       setLoading(false);
@@ -198,6 +220,7 @@ export default function AccountSettings() {
   const handleDeleteAccount = async (password: string) => {
     if (!password) {
       setError('Please enter your password to confirm');
+      showModal('Missing Password', 'Please enter your password to confirm', 'error');
       return;
     }
 
@@ -209,6 +232,7 @@ export default function AccountSettings() {
 
       if (!token) {
         setError('Please login to continue');
+        showModal('Login Required', 'Please login to continue', 'error');
         return;
       }
 
@@ -227,10 +251,13 @@ export default function AccountSettings() {
         setShowDeleteConfirm(false);
         setShowDeleteSuccess(true);
       } else {
-        setError(data.message || 'Failed to delete account');
+        const message = data.message || 'Failed to delete account';
+        setError(message);
+        showModal('Delete Failed', message, 'error');
       }
     } catch (err) {
       setError('Failed to delete account');
+      showModal('Delete Failed', 'Failed to delete account', 'error');
       console.error('Error deleting account:', err);
     } finally {
       setLoading(false);
@@ -300,16 +327,8 @@ export default function AccountSettings() {
           </div>
         </div>
 
-        {error && (
-          <div className="mb-6 bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg">
-            {error}
-          </div>
-        )}
-        {success && (
-          <div className="mb-6 bg-green-500/10 border border-green-500/30 text-green-400 px-4 py-3 rounded-lg">
-            {success}
-          </div>
-        )}
+        {error && <div className="sr-only">{error}</div>}
+        {success && <div className="sr-only">{success}</div>}
 
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
           <button
@@ -591,6 +610,46 @@ export default function AccountSettings() {
                 className="px-4 py-2 rounded-lg bg-blue-600/90 text-white hover:bg-blue-500 transition cursor-pointer"
               >
                 Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {modal.show && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 rounded-2xl shadow-2xl max-w-md w-full">
+            <div
+              className={`px-6 py-4 border-b border-slate-700/50 flex items-center justify-between ${
+                modal.type === 'success' ? 'bg-blue-500/10' : 'bg-red-500/10'
+              }`}
+            >
+              <h3
+                className={`text-lg font-semibold ${
+                  modal.type === 'success' ? 'text-blue-400' : 'text-red-400'
+                }`}
+              >
+                {modal.title}
+              </h3>
+              <button
+                onClick={closeModal}
+                className="text-slate-400 hover:text-white transition-colors"
+                aria-label="Close dialog"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="px-6 py-4">
+              <p className="text-slate-300 text-sm leading-relaxed">{modal.message}</p>
+            </div>
+
+            <div className="px-6 py-4 border-t border-slate-700/50 flex justify-end">
+              <button
+                onClick={closeModal}
+                className="px-4 py-2 rounded-lg font-medium transition-colors bg-blue-500/20 text-blue-400 hover:bg-blue-500/30"
+              >
+                OK
               </button>
             </div>
           </div>

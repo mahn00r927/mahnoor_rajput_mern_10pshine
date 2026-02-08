@@ -12,7 +12,7 @@ export function Login() {
   const handleLogin = async () => {
     setError("");
     if (!email || !password) {
-      alert("Please enter email and password");
+      setError("Please enter email and password");
       return;
     }
 
@@ -43,12 +43,10 @@ export function Login() {
       if (err instanceof Error) {
         console.error("Error signing in:", err.message);
         setError(err.message);
-        alert(err.message);
       } else {
         // fallback for non-Error values
         console.error("Error signing in:", err);
         setError("An unknown error occurred");
-        alert("An unknown error occurred");
       }
     }
   };
