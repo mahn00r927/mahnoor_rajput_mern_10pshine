@@ -68,7 +68,7 @@ export const Navbar: React.FC<{ toggleTheme: () => void }> = ({ toggleTheme }) =
           {/* Right side: Theme Toggle + Sign In */}
           <div className="flex items-center gap-3">
             {/* Theme Toggle Button */}
-             {/* <button
+              <button
               onClick={handleToggle}
               className="rounded-full p-2 sm:p-2.5
                 bg-slate-100/80
@@ -80,7 +80,7 @@ export const Navbar: React.FC<{ toggleTheme: () => void }> = ({ toggleTheme }) =
               aria-label="Toggle theme"
             >
               {isDark ? '☀️' : '🌙'}
-            </button>   */}
+            </button>   
 
             {userName ? (
               <button
