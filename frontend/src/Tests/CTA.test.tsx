@@ -117,7 +117,7 @@ describe('CTASection Component', () => {
     });
 
     it('should display all content in correct order', () => {
-      const { container } = renderWithRouter(<CTASection />);
+     renderWithRouter(<CTASection />);
       
       // Check heading
       expect(

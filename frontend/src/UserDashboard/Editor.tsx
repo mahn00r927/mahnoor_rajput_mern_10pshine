@@ -59,12 +59,14 @@ const RichTextEditor: React.FC = () => {
     if (note) {
       setTitle(note.title);
       setFolder(note.folder || "Default");
+      setIsPinned(Boolean(note.isPinned));
 
       if (editorRef.current) {
         editorRef.current.innerHTML = note.content || "<p><br></p>";
       }
     } else {
       setFolder((prev) => prev || "Default");
+      setIsPinned(false);
       if (editorRef.current && editorRef.current.innerHTML === "") {
         editorRef.current.innerHTML = "<p><br></p>";
       }
@@ -184,42 +186,51 @@ const RichTextEditor: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] text-white flex flex-col">
-      {/* Header */}
-      <div className="flex flex-row sm:flex-row items-center justify-between px-4 sm:px-6 py-4 border-b border-slate-800 gap-3 sm:gap-0">
-        <button
-          onClick={handleBack}
-          className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors duration-200 cursor-pointer"
-        >
-          <ArrowLeft size={20} />
-          <span className="text-lg">Back</span>
-        </button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white flex flex-col relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-40 -right-24 h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="absolute -bottom-40 -left-24 h-80 w-80 rounded-full bg-fuchsia-500/10 blur-3xl" />
+      </div>
 
-        <button
-          onClick={handleSave}
-          className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
-            isSaved ? "bg-green-600 hover:bg-green-700" : "bg-blue-600 hover:bg-blue-700"
-          }`}
-        >
-          <Save size={18} />
-          <span>{isSaved ? "Saved!" : "Save"}</span>
-        </button>
+      {/* Header */}
+      <div className="relative border-b border-slate-800/80 bg-slate-950/50 backdrop-blur">
+        <div className="max-w-6xl mx-auto flex flex-row sm:flex-row items-center justify-between px-4 sm:px-6 py-4 gap-3 sm:gap-0">
+          <button
+            onClick={handleBack}
+            className="flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2 text-slate-300 hover:text-white hover:border-slate-700 transition-colors duration-200 cursor-pointer"
+          >
+            <ArrowLeft size={18} />
+            <span>Back</span>
+          </button>
+
+          <button
+            onClick={handleSave}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all duration-200 cursor-pointer shadow-lg ${
+              isSaved
+                ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/30"
+                : "bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 shadow-cyan-500/20"
+            }`}
+          >
+            <Save size={18} />
+            <span>{isSaved ? "Saved!" : "Save"}</span>
+          </button>
+        </div>
       </div>
 
       {/* Editor Container */}
-      <div className="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 w-full">
-        <div className="bg-[#1a2332] rounded-lg shadow-2xl overflow-hidden flex flex-col">
+      <div className="relative flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 w-full">
+        <div className="bg-slate-900/60 rounded-2xl shadow-2xl border border-slate-800/80 overflow-hidden flex flex-col">
           {/* Title Input */}
           <input
             type="text"
             placeholder="Note title..."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-4 sm:px-6 py-4 sm:py-5 text-2xl text-slate-300 placeholder-slate-600 border-none outline-none"
+            className="w-full bg-slate-900/40 px-4 sm:px-6 py-4 sm:py-5 text-2xl text-white placeholder-slate-500 border-b border-slate-800/80 outline-none"
           />
 
           {/* Toolbar */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 px-2 sm:px-4 py-3 border-y border-slate-700">
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 px-2 sm:px-4 py-3 border-b border-slate-800/80 bg-slate-950/40">
             <ToolbarButton onClick={() => executeCommand("bold")} icon={<Bold size={20} />} title="Bold (Ctrl+B)" />
             <ToolbarButton onClick={() => executeCommand("italic")} icon={<Italic size={20} />} title="Italic (Ctrl+I)" />
             <ToolbarButton onClick={() => executeCommand("underline")} icon={<Underline size={20} />} title="Underline (Ctrl+U)" />
@@ -244,13 +255,15 @@ const RichTextEditor: React.FC = () => {
               value={folder}
               onChange={(e) => setFolder(e.target.value)}
               placeholder="Select or type folder"
-              className="ml-auto sm:ml-4 mt-2 sm:mt-0 bg-gray-800 text-white rounded px-2 py-1 text-sm w-full sm:w-auto"
+              className="ml-auto sm:ml-4 mt-2 sm:mt-0 bg-slate-900/70 border border-slate-800 text-white rounded-lg px-3 py-1.5 text-sm w-full sm:w-auto"
             />
             <button
               type="button"
               onClick={() => setIsPinned(!isPinned)}
-              className={`flex items-center gap-1 px-2 py-1 rounded cursor-pointer ${
-                isPinned ? "bg-yellow-500 text-white" : "bg-gray-800 text-gray-300"
+              className={`flex items-center gap-1 px-3 py-1.5 rounded-lg border cursor-pointer transition ${
+                isPinned
+                  ? "bg-yellow-400/90 text-slate-900 border-yellow-300/70"
+                  : "bg-slate-900/70 text-slate-300 border-slate-800 hover:bg-slate-800/80"
               }`}
             >
               {isPinned ? "⭐ Star" : "☆ Star"}
@@ -265,7 +278,7 @@ const RichTextEditor: React.FC = () => {
             tabIndex={0}
             onClick={handleEditorClick}
             suppressContentEditableWarning
-            className="min-h-[300px] sm:min-h-[400px] px-4 sm:px-6 py-6 sm:py-8 text-slate-300 outline-none editor-content flex-1"
+            className="min-h-[300px] sm:min-h-[420px] px-4 sm:px-6 py-6 sm:py-8 text-slate-200 outline-none editor-content flex-1 bg-slate-950/20"
             style={{ lineHeight: "1.6" }}
           />
         </div>
@@ -280,9 +293,9 @@ const RichTextEditor: React.FC = () => {
 
       {/* Link Modal */}
       {showLinkModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
-          <div className="bg-[#1a2332] rounded-lg p-6 w-full max-w-md border border-slate-700">
-            <h3 className="text-xl font-semibold mb-4 text-slate-200">Insert Link</h3>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+          <div className="bg-slate-900/90 rounded-2xl p-6 w-full max-w-md border border-slate-800/80 shadow-2xl">
+            <h3 className="text-xl font-semibold mb-4 text-white">Insert Link</h3>
             <div className="space-y-4">
               <div>
                 <label htmlFor="linkText" className="block text-sm text-slate-400 mb-2">Link Text</label>
@@ -292,7 +305,7 @@ const RichTextEditor: React.FC = () => {
                   value={linkText}
                   onChange={(e) => setLinkText(e.target.value)}
                   placeholder="Text to display"
-                  className="w-full px-4 py-2 bg-[#0a0e1a] border border-slate-700 rounded text-slate-300 placeholder-slate-600 outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-slate-200 placeholder-slate-500 outline-none focus:border-blue-500"
                 />
               </div>
               <div>
@@ -303,7 +316,7 @@ const RichTextEditor: React.FC = () => {
                   value={linkUrl}
                   onChange={(e) => setLinkUrl(e.target.value)}
                   placeholder="https://example.com"
-                  className="w-full px-4 py-2 bg-[#0a0e1a] border border-slate-700 rounded text-slate-300 placeholder-slate-600 outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2 bg-slate-950/60 border border-slate-800 rounded-lg text-slate-200 placeholder-slate-500 outline-none focus:border-blue-500"
                   onKeyDown={(e) => e.key === "Enter" && insertLink()}
                 />
               </div>
@@ -311,7 +324,7 @@ const RichTextEditor: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-3 mt-6">
               <button
                 onClick={insertLink}
-                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-medium transition-colors duration-200 cursor-pointer"
+                className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 rounded-lg font-medium transition-colors duration-200 cursor-pointer"
               >
                 Insert
               </button>

@@ -70,11 +70,15 @@ export function ResetPassword() {
   // ✅ Success state
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16">
-        <div className="w-full max-w-md bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl shadow-blue-500/20">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16 relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -top-40 -right-32 h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl" />
+          <div className="absolute -bottom-40 -left-32 h-80 w-80 rounded-full bg-fuchsia-500/10 blur-3xl" />
+        </div>
+        <div className="w-full max-w-md bg-slate-900/80 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl border border-slate-800/80 relative">
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-6">
-              <CheckCircle className="w-8 h-8 text-green-400" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-500/15 rounded-2xl mb-6 border border-emerald-400/30">
+              <CheckCircle className="w-8 h-8 text-emerald-400" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-3">
               Password Reset Successfully!
@@ -103,15 +107,19 @@ export function ResetPassword() {
   }
   // ✅ Reset form
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16">
-      <div className="w-full max-w-md bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl shadow-blue-500/20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16 relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-40 -right-32 h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="absolute -bottom-40 -left-32 h-80 w-80 rounded-full bg-fuchsia-500/10 blur-3xl" />
+      </div>
+      <div className="w-full max-w-md bg-slate-900/80 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl border border-slate-800/80 relative">
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">Reset your password</h1>
           <p className="text-slate-400 leading-relaxed text-sm sm:text-base">Enter your new password below</p>
         </div>
 
         {error && (
-          <div className="mb-6 bg-red-500/10 border border-red-500/50 rounded-2xl p-4 flex items-start">
+          <div className="mb-6 bg-red-500/10 border border-red-500/40 rounded-2xl p-4 flex items-start">
             <AlertCircle className="w-5 h-5 text-red-400 mr-3 shrink-0 mt-0.5" />
             <p className="text-red-400 text-sm">{error}</p>
           </div>
@@ -128,12 +136,12 @@ export function ResetPassword() {
               onChange={(e) => setNewPassword(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Enter new password"
-              className="w-full bg-slate-900/50 border border-slate-700 text-white placeholder-slate-400 rounded-2xl py-3 sm:py-4 pl-12 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+              className="w-full bg-slate-950/60 border border-slate-800 text-white placeholder-slate-500 rounded-2xl py-3 sm:py-4 pl-12 pr-12 focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-300"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors cursor-pointer"
             >
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
@@ -169,12 +177,12 @@ export function ResetPassword() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Confirm new password"
-              className="w-full bg-slate-900/50 border border-slate-700 text-white placeholder-slate-400 rounded-2xl py-3 sm:py-4 pl-12 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+              className="w-full bg-slate-950/60 border border-slate-800 text-white placeholder-slate-500 rounded-2xl py-3 sm:py-4 pl-12 pr-12 focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-all duration-300"
             />
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors cursor-pointer"
             >
               {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
@@ -182,7 +190,7 @@ export function ResetPassword() {
         </div>
 
         {/* Password Requirements */}
-        <div className="mb-6 bg-slate-700/30 rounded-2xl p-4 text-sm sm:text-base">
+        <div className="mb-6 bg-slate-800/40 rounded-2xl p-4 text-sm sm:text-base border border-slate-800/80">
           <p className="text-slate-300 font-medium mb-2">Password must contain:</p>
           <ul className="space-y-1.5">
             {[
@@ -203,7 +211,7 @@ export function ResetPassword() {
         <button
           onClick={handleReset}
           disabled={isLoading || !newPassword || !confirmPassword}
-          className="w-full bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:bg-slate-600 disabled:cursor-not-allowed text-white font-semibold py-3 sm:py-4 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/30 disabled:shadow-none"
+          className="w-full bg-linear-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-semibold py-3 sm:py-4 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-cyan-500/30 disabled:shadow-none cursor-pointer"
         >
           {isLoading ? "Resetting..." : "Reset Password"}
         </button>
