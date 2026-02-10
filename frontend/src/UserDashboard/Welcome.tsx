@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function WelcomeSection() {
   const [userName, setUserName] = useState('');
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUserName();
@@ -22,9 +24,21 @@ export default function WelcomeSection() {
           'Content-Type': 'application/json',
         },
       });
+      if (response.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setLoading(false);
+        navigate('/login', { replace: true });
+        return;
+      }
+
+      if (!response.ok) {
+        setLoading(false);
+        return;
+      }
 
       const data = await response.json();
-      if (response.ok && data.success) {
+      if (data?.success && data?.user?.name) {
         setUserName(data.user.name);
       }
     } catch (error) {
@@ -82,7 +96,7 @@ export default function WelcomeSection() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <div className="rounded-xl border border-slate-800/70 bg-slate-900/60 px-4 py-3 text-sm">
             <p className="text-slate-400">Today</p>
             <p className="text-white font-medium">{new Date().toLocaleDateString()}</p>
@@ -91,6 +105,14 @@ export default function WelcomeSection() {
             <p className="text-slate-400">Workspace</p>
             <p className="text-white font-medium">Smart Notes</p>
           </div>
+          <button
+            type="button"
+            onClick={() => navigate("/editor", { state: { folder: "Default" } })}
+            className="md:hidden inline-flex items-center gap-2 rounded-xl border border-cyan-400/30 bg-gradient-to-r from-blue-600 to-cyan-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-colors hover:from-blue-500 hover:to-cyan-400"
+          >
+            <span className="text-base leading-none">+</span>
+            New Note
+          </button>
         </div>
       </div>
     </div>

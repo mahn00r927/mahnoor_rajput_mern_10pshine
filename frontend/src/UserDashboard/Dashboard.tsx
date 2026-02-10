@@ -16,17 +16,41 @@ export default function Dashboard() {
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const handleUnauthorized = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login", { replace: true });
+  };
+
   const fetchNotes = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
+      if (!token) {
+        setNotes([]);
+        handleUnauthorized();
+        return;
+      }
       const res = await fetch(`${BASE_URL}/notes`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
+      if (res.status === 401) {
+        setNotes([]);
+        handleUnauthorized();
+        return;
+      }
+
+      if (!res.ok) {
+        setNotes([]);
+        return;
+      }
+
       const data = await res.json();
-      setNotes(data);
+      setNotes(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error(err);
+      setNotes([]);
     } finally {
       setLoading(false);
     }
