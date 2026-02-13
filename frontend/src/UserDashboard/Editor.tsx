@@ -250,24 +250,26 @@ const RichTextEditor: React.FC = () => {
             <ToolbarButton onClick={() => executeCommand("justifyCenter")} icon={<AlignCenter size={20} />} title="Align Center" />
             <ToolbarButton onClick={() => executeCommand("justifyRight")} icon={<AlignRight size={20} />} title="Align Right" />
 
-            <input
-              list="folders"
-              value={folder}
-              onChange={(e) => setFolder(e.target.value)}
-              placeholder="Select or type folder"
-              className="ml-auto sm:ml-4 mt-2 sm:mt-0 bg-slate-900/70 border border-slate-800 text-white rounded-lg px-3 py-1.5 text-sm w-full sm:w-auto"
-            />
-            <button
-              type="button"
-              onClick={() => setIsPinned(!isPinned)}
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-lg border cursor-pointer transition ${
-                isPinned
-                  ? "bg-yellow-400/90 text-slate-900 border-yellow-300/70"
-                  : "bg-slate-900/70 text-slate-300 border-slate-800 hover:bg-slate-800/80"
-              }`}
-            >
-              {isPinned ? "⭐ Star" : "☆ Star"}
-            </button>
+            <div className="ml-auto flex w-full sm:w-auto items-start gap-2">
+              <input
+                list="folders"
+                value={folder}
+                onChange={(e) => setFolder(e.target.value)}
+                placeholder="Select or type folder"
+                className="bg-slate-900/70 border border-slate-800 text-white rounded-lg px-3 py-1.5 text-sm w-36 sm:w-auto"
+              />
+              <button
+                type="button"
+                onClick={() => setIsPinned(!isPinned)}
+                className={`self-start flex items-center gap-1 px-3 py-1.5 rounded-lg border cursor-pointer transition ${
+                  isPinned
+                    ? "bg-yellow-400/90 text-slate-900 border-yellow-300/70"
+                    : "bg-slate-900/70 text-slate-300 border-slate-800 hover:bg-slate-800/80"
+                }`}
+              >
+                {isPinned ? "⭐ Star" : "☆ Star"}
+              </button>
+            </div>
           </div>
 
           {/* Editor Area */}
