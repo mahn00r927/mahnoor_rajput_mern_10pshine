@@ -1,0 +1,6 @@
+projectKey=Smart-Notes
+serverUrl=http://localhost:9000
+serverVersion=26.1.0.118079
+dashboardUrl=http://localhost:9000/dashboard?id=Smart-Notes
+ceTaskId=52984537-3a4d-41a3-8390-2e576793c25e
+ceTaskUrl=http://localhost:9000/api/ce/task?id=52984537-3a4d-41a3-8390-2e576793c25e
